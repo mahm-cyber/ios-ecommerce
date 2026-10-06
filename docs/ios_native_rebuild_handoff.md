@@ -81,7 +81,10 @@ Polaris Max is a white-label e-commerce app. One codebase serves four brands (`c
 - **The backend can return HTTP 200 with an `errors` field in the body.** This must be treated as a failure.
 - HTTP 401, or a 302 redirect to the login page, means the session expired: clear the token and customer, reset the session.
 - HTTP 422 is a validation error carrying a server-localized message. HTTP 409 on the cart means a payment conflict.
-- Timeouts are 30 seconds. Reads retry up to 3 times with increasing backoff. **Mutations and payments never retry.**
+- Timeouts are 30 seconds. Reads retry up to 3 times with increasing backoff (`400ms × attempt`, done in repositories, not in the client). **Mutations and payments never retry.**
+- URL shape: `{apiUrl}/{language}/api/{apiVersion}/{endpoint}`, for example `…/ar/api/v006/Questions`. The language is read per request because it can change while the app runs.
+- `accountId` is not a header: on a GET it is sent as a query parameter.
+- Besides a non-null `errors` field, an HTTP 200 body can carry `status: 401` or `status: 422`. Both must be treated as the matching failure.
 
 ### Findings that shape the iOS design
 
@@ -129,6 +132,9 @@ Polaris Max is a white-label e-commerce app. One codebase serves four brands (`c
 | 6 | `AppConfiguration`'s initializer **throws** a descriptive error; the app entry point catches it and calls `fatalError`. | I proposed `fatalError`. It is the right outcome but the wrong place: a type that crashes internally cannot be unit-tested for missing keys. Throwing keeps the logic testable and lets one call site decide to stop. |
 | 7 | **Dependencies are handed to each screen explicitly** (option C): the container stays in the app layer and passes each screen only what it needs through its initializer. | A screen's dependencies are visible in its declaration, a test passes a fake with no setup, and feature modules never need to see `AppContainer`. A global hides dependencies; the whole container in the environment is a service locator. The SwiftUI environment stays reserved for cross-cutting UI values such as the theme. |
 | 5 | Config reaches Swift via **xcconfig → Info.plist → `Bundle` → typed struct** (option A). | One selector (the scheme), so brand and environment cannot disagree; no values in Swift source. Limits: strings only, so no nested data, and values are readable in the shipped bundle, so it is not a place for real secrets. Custom keys need a real Info.plist file, because `INFOPLIST_KEY_` settings only cover keys Apple defines. |
+| 8 | **Proposed, awaiting my confirmation:** endpoints are generic values that carry their response type, declared per feature area. | I first chose one enum with a case per endpoint. An enum case cannot carry its response type, so a wrong decode type still compiles, and the enum grows into one giant file like Flutter's `PolarisApi`. Static members keep the call site as readable as an enum case. |
+| 9 | **Proposed, awaiting my confirmation:** the client receives token, language and device ID as injected "current value" dependencies; it never sees the session. | I first chose the client holding the session. That makes `Networking` import `Data` while `Data` imports `Networking`, a circular package dependency that does not build, and it is Flutter's API ↔ session cycle again. No performance difference. |
+| 10 | The test seam is a **one-function transport protocol** ("send a `URLRequest`, return data and response"); `URLSession` is the real implementation. | Simplest seam; lets request building, validation and decoding be tested. A fake at the repository level comes in Phase 2. |
 
 Bundle IDs in the Flutter app: dev `com.namaait.cuddluxedev`, prod `io.onemobile.cuddluxe`.
 
@@ -201,38 +207,49 @@ Concepts to learn for this phase: target vs build configuration vs scheme; xccon
 
 ## 7. Current status
 
-**Phase 0 is complete in the working copy; the last changes are uncommitted. Next: commit and push, then start Phase 1 (networking).**
+**Phase 0 is complete, committed and pushed. Phase 1 (networking) has started: the design is explained and the decisions are proposed; no Phase 1 code is written yet.**
 
-The Xcode project is at `~/Desktop/ios-ecommerce/IOS-ECommerce/IOS-ECommerce.xcodeproj` (Xcode 26.6). Targets: app `IOS-ECommerce` (module `IOS_Ecommerce`) and unit tests `IOS EcommerceTests` (Swift Testing, hosted by the app). Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`.
+The Xcode project is at `~/Desktop/ios-ecommerce/IOS-ECommerce/IOS-ECommerce.xcodeproj` (Xcode 26.6). Targets: app `IOS-ECommerce` (module `IOS_Ecommerce`) and unit tests `IOS EcommerceTests` (Swift Testing, hosted by the app). Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`. This handoff file now lives in that repo at `docs/ios_native_rebuild_handoff.md`; the copy in the Flutter repo is older.
 
 What exists and is verified (tests pass on an iOS 26.3.1 simulator with the Dev scheme; Prod builds):
 
 - Configurations `Debug-Dev`, `Release-Dev`, `Debug-Prod`, `Release-Prod`; shared schemes `IOS-ECommerce-Dev` / `IOS-ECommerce-Prod`, both with the test target in their Test action.
 - `Configuration/Base.xcconfig`, `Dev.xcconfig`, `Prod.xcconfig`, git-ignored `Secrets.xcconfig`; six settings reach the app through `Configuration/Info.plist`: `APP_ENVIRONMENT`, `API_BASE_URL`, `API_VERSION`, `API_ACCOUNT_ID`, `BRAND_SLUG`, `API_SECRET_KEY`.
 - Deployment target is iOS 17.0, set once at the project level; neither target overrides it.
-- `Configuration/AppConfiguration.swift`: `AppEnvironment`, `AppConfigurationError`, `AppConfiguration` (all `nonisolated`), `init(dictionary:) throws`, `fromMainBundle()`, static `sample` for previews.
-- `IOS-ECommerce/Composition/AppContainer.swift`: `final class` holding the configuration.
-- `IOS_ECommerceApp`: stores the container, builds the configuration in `init`, single `catch` calling `fatalError`.
-- `ContentView` takes the configuration through its initializer (decision 7) and shows the environment and host as a temporary proof.
-- `IOS EcommerceTests/AppConfigurationTests.swift`: 11 test functions, 18 cases, all passing. Covers valid input, Prod, trimming, each key absent (parameterized), empty and whitespace-only values, non-string value, unknown environment, four malformed URLs (parameterized).
+- `Configuration/AppConfiguration.swift`, `IOS-ECommerce/Composition/AppContainer.swift`, `IOS_ECommerceApp`, `ContentView` (initializer injection, decision 7).
+- `IOS EcommerceTests/AppConfigurationTests.swift`: 11 test functions, 18 cases, all passing.
 
 Who wrote what, so the next mentor knows what I have and have not practised:
 
 - I wrote, with review: the Xcode configuration, xcconfigs, Info.plist, `AppContainer`, the `App` entry point, `ContentView`, and a first single-assert test.
-- Given to me on request: the final `AppConfiguration` ("give me the final file"), and at "make all changes by yourself" the full test file, the `nonisolated` annotations and the deployment-target cleanup in the project file.
-- So I have **not yet written on my own**: failure-path tests with `#expect(throws:)`, parameterized tests, or a throwing initializer with a validation helper. Worth having me do these unaided in Phase 1.
+- Given to me on request: the final `AppConfiguration`, the full test file, the `nonisolated` annotations and the deployment-target cleanup.
+- So I have **not yet written on my own**: failure-path tests with `#expect(throws:)`, parameterized tests, or a throwing initializer with a validation helper. Phase 1 tests are mine to write unaided.
 
-Concept to revisit in Phase 1: the app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` (Xcode 26 default). Every app type is main-actor isolated unless marked `nonisolated`. Pure value types and the networking layer will need that annotation.
+Phase 1 layout (packages are created in this phase):
 
-Declined or deferred (do not re-raise unless it causes a problem): wrapping the sample in `#if DEBUG`; renaming `API_BASE_URL` (it holds `/host`, the plist adds `https:/`); moving `AppConfiguration.swift` out of the non-target `Configuration` folder. `@Environment` is deferred to the theme in Phase 3 (not for `AppConfiguration`).
+```
+Packages/
+├── Core/                 errors shared by every layer; imports nothing
+└── Networking/           depends on Core only
+    ├── Sources/Networking/{Request, Response, Client}
+    └── Tests/NetworkingTests/
+```
+
+Local packages default to no actor isolation, so the `nonisolated` annotations needed in the app target (`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`) are not needed there.
+
+Phase 1 flow: build `URLRequest` → send → map transport failure → check HTTP status (401 or 302-to-login = session expired, 422 = validation, 409 = conflict) → decode envelope → check body `errors` / `status` → decode `data`. The client only reports "session expired" as an error; who reacts is Phase 2.
+
+Declined or deferred (do not re-raise unless it causes a problem): wrapping the sample in `#if DEBUG`; renaming `API_BASE_URL` (it holds `/host`, the plist adds `https:/`); moving `AppConfiguration.swift` out of the non-target `Configuration` folder. `@Environment` is deferred to the theme in Phase 3.
 
 Still needed before Phase 1 can make a real request: the real Cuddluxe secret key in `Secrets.xcconfig` (currently a placeholder).
 
 My next actions:
 
-- Read the test file and be able to explain each test.
-- Commit and push.
-- Start Phase 1 with the mentor's "understand" step for networking.
+1. Confirm or challenge decisions 8 and 9.
+2. Create the `Core` and `Networking` local packages under `Packages/`, add them to the project, link `Networking` to the app, make `Networking` depend on `Core`. Prove it with one `public` placeholder type used from the app; build both schemes; run the package tests.
+3. Unit 1.1, request building (pure logic, no network yet): HTTP method type; the endpoint value (path, method, query items, optional body, response type); a small networking configuration value (base URL, API version, account ID, secret key; `Networking` must not import `AppConfiguration`); the request builder using `URLComponents`; one real endpoint, `Questions` (GET).
+4. Tests for 1.1, written by me: URL shape with and without a trailing slash on the base URL; language change changes the path; GET carries `accountId` as a query item and keeps the endpoint's own items; fixed headers always present; `Authorization` present with a token and absent without; `device_token` present with a device ID and absent without; 30-second timeout; parameterized over `en`, `ar`, `de`.
+5. Send for review: both `Package.swift` files, the endpoint and builder files, the test file and its results.
 
 ---
 
@@ -260,3 +277,4 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-06 — Task 7 committed and pushed: container, entry point, launch failure and initializer injection all working. Two small `ContentView`/`catch` fixes left. Task 8 (tests) defined.
 - 2026-10-06 — Added the unit test target and a first passing test. Diagnosed two issues: test target deployment target 26.5 vs 26.3.1 simulators, and default main-actor isolation forcing `await` on value types.
 - 2026-10-06 — At my request the mentor made the remaining Phase 0 changes: unified deployment target (17.0 at project level), `nonisolated` on the config types, and the full `AppConfiguration` test suite (18 cases passing). Phase 0 complete pending commit.
+- 2026-10-06 — Phase 0 committed and pushed. Handoff file copied into the iOS repo (`docs/`). Phase 1 started: re-read the Flutter API layer and added three contract details (URL shape, `accountId` as a GET query item, body `status` 401/422). Answered the three design questions (enum, client holds session, transport protocol); mentor agreed on the third and proposed decisions 8 and 9 instead of my first two. Unit 1.1 tasks and test scenarios defined; no code yet.
