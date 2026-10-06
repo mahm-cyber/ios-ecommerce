@@ -10,7 +10,9 @@
 
 
 #include "Base.xcconfig"
-
+#include? "Secrets.xcconfig"
 
 INFOPLIST_KEY_CFBundleDisplayName=IosEcommerce Dev
 PRODUCT_BUNDLE_IDENTIFIER=com.mahmoud.iosEcommerceDev
+APP_ENVIRONMENT=Dev
+API_BASE_URL=/polaris-max.nmait.net

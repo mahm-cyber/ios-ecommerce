@@ -9,7 +9,10 @@
 // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
 
 #include "Base.xcconfig"
-
+#include? "Secrets.xcconfig"
 
 INFOPLIST_KEY_CFBundleDisplayName=IosEcommerce Prod
 PRODUCT_BUNDLE_IDENTIFIER=com.mahmoud.iosEcommerceProd
+APP_ENVIRONMENT=Prod
+API_BASE_URL=/system.polaris-max.com
+

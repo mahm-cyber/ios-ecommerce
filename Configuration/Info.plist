@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-   Info.plist
-   IOS-ECommerce
-
-   Created by NamaaIT Apple3 on 06/10/2026.
-   Copyright (c) 2026 ___ORGANIZATIONNAME___. All rights reserved.
--->
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>API_SECRET_KEY</key>
+	<string>$(API_SECRET_KEY)</string>
+	<key>BRAND_SLUG</key>
+	<string>$(BRAND_SLUG)</string>
+	<key>API_VERSION</key>
+	<string>$(API_VERSION)</string>
+	<key>APP_ENVIRONMENT</key>
+	<string>$(APP_ENVIRONMENT)</string>
+	<key>API_BASE_URL</key>
+	<string>https:/$(API_BASE_URL)/</string>
+	<key>API_ACCOUNT_ID</key>
+	<string>$(API_ACCOUNT_ID)</string>
+</dict>
 </plist>
