@@ -26,6 +26,24 @@ struct AppConfiguration: Equatable, Sendable {
     let accountID: String
     let brandSlug: String
     let secretKey: String
+    
+    static let sample = {
+        do {
+        let example =   try  AppConfiguration(
+                dictionary: [
+                    "API_VERSION" : "1.0.0",
+                    "API_ACCOUNT_ID":"28",
+                    "BRAND_SLUG": "cuddluxe",
+                    "APP_ENVIRONMENT":"Dev",
+                    "API_BASE_URL":"https://polaris-max.nmait.net/",
+                    "API_SECRET_KEY":"EmptyKey",
+                ]
+            )
+            return example
+        } catch {
+            fatalError("Can't Create a preview Sample")
+        }
+    }()
 
     init(dictionary: [String: Any]) throws {
         let environmentValue = try Self.string(for: .environment, in: dictionary)

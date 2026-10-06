@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    let configuration: AppConfiguration
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Our Environment is:- \(configuration.environment)")
+            Text("Our host is \(configuration.baseURL.host())")
         }
         .padding()
         
@@ -21,5 +22,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(configuration: .sample)
 }

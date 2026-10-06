@@ -9,9 +9,29 @@ import SwiftUI
 
 @main
 struct IOS_ECommerceApp: App {
+    
+    private let container: AppContainer
+    
+    init() {
+        do {
+            let appConfiguration = try AppConfiguration.fromMainBundle()
+            container = AppContainer(appConfiguration: appConfiguration)
+
+        } catch AppConfigurationError.invalidEnvironment(value: let message) {
+            fatalError("App Can't launch due to \(message)")
+        } catch AppConfigurationError.invalidURL(value: let message) {
+            fatalError("App Can't launch due to \(message)")
+        } catch AppConfigurationError.missingValue(key: let message) {
+            fatalError("App Can't launch due to the missing key\(message)")
+        } catch {
+            fatalError("App Can't launch due to \(error)")
+        }
+    }
+   
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(configuration: container.appConfiguration)
         }
+        
     }
 }
