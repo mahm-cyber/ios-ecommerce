@@ -1,0 +1,16 @@
+//
+//  Dev.xcconfig
+//  IOS-ECommerce
+//
+//  Created by NamaaIT Apple3 on 06/10/2026.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+
+#include "Base.xcconfig"
+
+
+INFOPLIST_KEY_CFBundleDisplayName=IosEcommerce Dev
+PRODUCT_BUNDLE_IDENTIFIER=com.mahmoud.iosEcommerceDev
