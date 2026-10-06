@@ -13,8 +13,9 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Text("Our Environment is:- \(configuration.environment)")
-            Text("Our host is \(configuration.baseURL.host())")
+           
+            Text("Our Environment is:- \(configuration.environment.rawValue)")
+            Text("Our host is \(configuration.baseURL.host() ?? "")")
         }
         .padding()
         
