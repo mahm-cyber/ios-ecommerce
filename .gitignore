@@ -12,3 +12,5 @@ Pods/
 
 # macOS
 .DS_Store
+
+xcuserdata
