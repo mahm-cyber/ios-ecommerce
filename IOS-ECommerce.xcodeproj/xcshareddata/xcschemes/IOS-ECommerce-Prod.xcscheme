@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F8F42B353074CCE900BB5FD5"
-               BuildableName = "IOS-ECommerce.app"
+               BuildableName = "IOS Ecommerce.app"
                BlueprintName = "IOS-ECommerce"
                ReferencedContainer = "container:IOS-ECommerce.xcodeproj">
             </BuildableReference>
@@ -29,6 +29,19 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F8F42B5C3075183A00BB5FD5"
+               BuildableName = "IOS EcommerceTests.xctest"
+               BlueprintName = "IOS EcommerceTests"
+               ReferencedContainer = "container:IOS-ECommerce.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug-Prod"
@@ -46,7 +59,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F8F42B353074CCE900BB5FD5"
-            BuildableName = "IOS-ECommerce.app"
+            BuildableName = "IOS Ecommerce.app"
             BlueprintName = "IOS-ECommerce"
             ReferencedContainer = "container:IOS-ECommerce.xcodeproj">
          </BuildableReference>
@@ -63,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F8F42B353074CCE900BB5FD5"
-            BuildableName = "IOS-ECommerce.app"
+            BuildableName = "IOS Ecommerce.app"
             BlueprintName = "IOS-ECommerce"
             ReferencedContainer = "container:IOS-ECommerce.xcodeproj">
          </BuildableReference>

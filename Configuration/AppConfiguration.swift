@@ -8,18 +8,18 @@
 import Foundation
  
 
-enum AppEnvironment: String, Sendable {
+nonisolated enum AppEnvironment: String, Sendable {
     case dev = "Dev"
     case prod = "Prod"
 }
 
-enum AppConfigurationError: Error, Equatable {
+nonisolated enum AppConfigurationError: Error, Equatable {
     case missingValue(key: String)
     case invalidEnvironment(value: String)
     case invalidURL(value: String)
 }
 
-struct AppConfiguration: Equatable, Sendable {
+nonisolated struct AppConfiguration: Equatable, Sendable {
     let environment: AppEnvironment
     let baseURL: URL
     let apiVersion: String
