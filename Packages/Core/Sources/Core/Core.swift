@@ -2,7 +2,7 @@
 // https://docs.swift.org/swift-book
 
 
-public struct AppCore {
+public struct CoreManager {
     public init() {
         
     }

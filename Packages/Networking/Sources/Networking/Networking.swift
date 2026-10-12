@@ -4,10 +4,10 @@
 import Core
 
 
-public struct Networking {
-    let core: AppCore
+public struct NetworkingManager {
+    let core: CoreManager
     
-    init(core: AppCore) {
+    init(core: CoreManager) {
         self.core = core
     }
 }
