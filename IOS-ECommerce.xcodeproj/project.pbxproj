@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F82AAF5A307CB6D600B7839A /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = F82AAF59307CB6D600B7839A /* Core */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F8F42B613075183A00BB5FD5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -17,6 +21,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F82AAF56307CB66C00B7839A /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Core; path = Packages/Core; sourceTree = "<group>"; };
+		F82AAF5B307CB76200B7839A /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Networking; path = Packages/Networking; sourceTree = "<group>"; };
 		F8F42B363074CCE900BB5FD5 /* IOS Ecommerce.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IOS Ecommerce.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F42B5D3075183A00BB5FD5 /* IOS EcommerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IOS EcommerceTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -32,6 +38,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		F82AAF55307CB5A700B7839A /* Packages */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Packages;
+			sourceTree = "<group>";
+		};
 		F8F42B383074CCE900BB5FD5 /* IOS-ECommerce */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "IOS-ECommerce";
@@ -57,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F82AAF5A307CB6D600B7839A /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,12 +82,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F8845587307B8AD5002C10DD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F8F42B2D3074CCE900BB5FD5 = {
 			isa = PBXGroup;
 			children = (
+				F82AAF5B307CB76200B7839A /* Networking */,
+				F82AAF56307CB66C00B7839A /* Core */,
+				F82AAF55307CB5A700B7839A /* Packages */,
 				F8F42B483074CDB100BB5FD5 /* Configuration */,
 				F8F42B383074CCE900BB5FD5 /* IOS-ECommerce */,
 				F8F42B5E3075183A00BB5FD5 /* IOS EcommerceTests */,
+				F8845587307B8AD5002C10DD /* Frameworks */,
 				F8F42B373074CCE900BB5FD5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -109,6 +132,7 @@
 			);
 			name = "IOS-ECommerce";
 			packageProductDependencies = (
+				F82AAF59307CB6D600B7839A /* Core */,
 			);
 			productName = "IOS-ECommerce";
 			productReference = F8F42B363074CCE900BB5FD5 /* IOS Ecommerce.app */;
@@ -128,6 +152,7 @@
 				F8F42B623075183A00BB5FD5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				F82AAF55307CB5A700B7839A /* Packages */,
 				F8F42B5E3075183A00BB5FD5 /* IOS EcommerceTests */,
 			);
 			name = "IOS EcommerceTests";
@@ -916,6 +941,13 @@
 			defaultConfigurationName = "Release-Dev";
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F82AAF59307CB6D600B7839A /* Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Core;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F8F42B2E3074CCE900BB5FD5 /* Project object */;
 }
