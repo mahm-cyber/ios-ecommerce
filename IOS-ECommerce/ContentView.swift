@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Core
 
 struct ContentView: View {
     
@@ -19,7 +18,6 @@ struct ContentView: View {
             Text("Our host is \(configuration.baseURL.host() ?? "")")
         }
         .padding()
-        
     }
 }
 
