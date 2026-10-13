@@ -9,10 +9,10 @@ import Foundation
 
 
 public struct Endpoint<Response: Decodable> : Sendable {
-    private let path: String
-    private let method: HTTPMethod
-    private let queries: [URLQueryItem]
-    
+      let path: String
+      let method: HTTPMethod
+      let queries: [URLQueryItem]
+
     public init(
         path: String,
         method: HTTPMethod = .get,
