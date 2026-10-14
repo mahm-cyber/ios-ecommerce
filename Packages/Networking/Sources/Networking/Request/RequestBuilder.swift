@@ -6,14 +6,15 @@
 //
 
 import Foundation
-
+import Core
 
 public struct RequestBuilder: Sendable {
     let apiConfig: APIConfiguration
-
+    
+    private let contentHeaderKey = "Content-Type"
     private let acceptValue = "application/json"
     private let acceptHeaderKey = "Accept"
-    private let secretHeaderKey = "SecretKey"
+    private let secretHeaderKey = "Secretkey"
     private let userAgentValue = "PolarisMax-iOS"
     private let userAgentHeaderKey = "User-Agent"
     private let xRequestedWithValue = "XMLHttpRequest"
@@ -25,31 +26,37 @@ public struct RequestBuilder: Sendable {
     }
 
 
-    public func buildURLRequest<Response>(for endpoint: Endpoint<Response>, language: String, token: String? = nil, deviceID: String? = nil,) throws -> URLRequest {
+    public func buildURLRequest<Response>(for endpoint: Endpoint<Response>, language: String, token: String? = nil, deviceID: String? = nil) throws -> URLRequest {
         guard  let  urlComponents =  URLComponents(url: apiConfig.baseURL, resolvingAgainstBaseURL: true) else {
             throw NetworkError.invalidURL
         }
 
-        guard let url = urlComponents.url else {
+        guard var url = urlComponents.url else {
             throw NetworkError.invalidURL
         }
+        
+       
+         
 
         var request = URLRequest(url: url)
         request.httpMethod = endpoint.method.rawValue
+        request.url?.append(path: endpoint.path)
         request.timeoutInterval = 30.0
         request.setValue(acceptValue, forHTTPHeaderField: acceptHeaderKey)
         request.setValue(apiConfig.secretKey, forHTTPHeaderField: secretHeaderKey)
         request.setValue(userAgentValue, forHTTPHeaderField: userAgentHeaderKey)
         request.setValue(xRequestedWithValue, forHTTPHeaderField:  xRequestedWithHeaderKey)
-
-        if token != nil || token?.isEmpty == false {
-            request.setValue("Bearer \(token ?? "")", forHTTPHeaderField: authrizationHeaderKey)
+        
+        if let body = endpoint.body,  !body.isEmpty {
+            request.setValue(acceptValue, forHTTPHeaderField: contentHeaderKey)
         }
 
-        if deviceID != nil {
-            if deviceID?.isEmpty == false {
-                request.setValue("\(deviceID ?? "")", forHTTPHeaderField: deviceIdHeaderKey)
-            }
+        if let token,  !token.isEmpty {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: authrizationHeaderKey)
+        }
+
+        if let deviceID, !deviceID.isEmpty {
+                request.setValue("\(deviceID)", forHTTPHeaderField: deviceIdHeaderKey)
         }
 
 
