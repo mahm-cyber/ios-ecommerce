@@ -8,6 +8,10 @@
 import Foundation
 
 
-public enum NetworkError: Error, Sendable {
+public enum NetworkError: Error, Sendable, Equatable {
+    case serverError(statusCode: Int, message: String?)
+    case invalidResponse
     case invalidURL
+    case sessionExpired
+    case noData
 }

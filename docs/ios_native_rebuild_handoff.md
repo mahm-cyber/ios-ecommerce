@@ -245,11 +245,11 @@ Still needed before Phase 1 can make a real request: the real Cuddluxe secret ke
 
 My next actions:
 
-1. (Done 2026-10-11: accepted decisions 8 and 9.)
-2. (Done 2026-10-12: `Packages/Core` and `Packages/Networking` exist, both iOS 17, both linked to the app, `Networking` depends on `Core` via `../Core`; Dev and Prod build.)
-3. Unit 1.1, request building (pure logic, no network yet): HTTP method type; the endpoint value (path, method, query items, optional body, response type); a small networking configuration value (base URL, API version, account ID, secret key; `Networking` must not import `AppConfiguration`); the request builder using `URLComponents`; one real endpoint, `Questions` (GET).
-4. Tests for 1.1, written by me: URL shape with and without a trailing slash on the base URL; language change changes the path; GET carries `accountId` as a query item and keeps the endpoint's own items; fixed headers always present; `Authorization` present with a token and absent without; `device_token` present with a device ID and absent without; 30-second timeout; parameterized over `en`, `ar`, `de`.
-5. Send for review: both `Package.swift` files, the endpoint and builder files, the test file and its results.
+1. (Done 2026-10-15: Unit 1.1 complete. `APIConfiguration`, `HTTPMethod`, `Endpoint<Response>`, and `RequestBuilder` fully implemented. Full `RequestBuilderTests` suite written and passing).
+2. (Done 2026-10-15: Modeled `/initial` DTOs and `APIResponse<T>` generic envelope).
+3. (Done 2026-10-15: Implemented `HTTPTransport` protocol, `URLSession` conformance, and `TestTransport` fake).
+4. (Done 2026-10-15: Implemented `NetworkClient` with session supplier closures, HTTP validation, envelope decoding, and unwrapping).
+5. At home: Write `NetworkClientTests.swift` testing happy path (200), HTTP 401, envelope 401, and server error handling using `TestTransport`.
 
 ---
 
@@ -258,25 +258,9 @@ My next actions:
 Add one line per session: date, what I built, what was reviewed, what was decided.
 
 - 2026-10-06 — Analysed the Flutter system. Made decisions 1 to 4. Agreed target architecture and phase plan. Phase 0 tasks defined; no code written yet.
-- 2026-10-06 — Created the Xcode project at `~/Desktop/ecommerce` with four configurations and two schemes. Added two xcconfigs. Hit an empty `PRODUCT_NAME` build error and a bundle ID vs display name mix-up; both still to fix.
-- 2026-10-06 — Restarted in `~/Desktop/ios-ecommerce`. Tasks 1 to 5 built successfully and were reviewed. Remaining: deployment target, duplicate `PRODUCT_NAME`, xcconfigs leaking into the bundle, `.gitignore`.
-- 2026-10-06 — Applied review fixes (deployment target 17, single `PRODUCT_NAME`, xcconfigs out of the bundle, `.gitignore`) and pushed to GitHub. Tasks 1 to 5 closed.
-- 2026-10-06 — Chose option A for configuration (decision 5). Learned that `//` truncates URLs in xcconfigs and that custom Info.plist keys need a real Info.plist file. Task 6 defined.
-- 2026-10-06 — Audited every Flutter config field for real use. Only `apiUrl`, `apiVersion`, `accountId`, `secretKey` and an environment value are launch configuration; the rest is dead, constant, already in the bundle, or belongs to the design system.
-- 2026-10-06 — Agreed the six config variables. First pass at task 6a reviewed: Prod marked as Dev, URL escaped with backslashes, shared values duplicated, secret placeholder committed.
-- 2026-10-06 — Second review of 6a/6b. Environment, duplication and secrets file fixed. Remaining: URL truncated by `//`, typo in the optional include, Info.plist not wired via `INFOPLIST_FILE` and missing five keys.
-- 2026-10-06 — Third review. Decided failure strategy (decision 6: type throws, app entry point stops). Build broken by `INFOPLIST_FILE` pointing at a folder; URL still truncated; `AppConfiguration` not yet written.
-- 2026-10-06 — 6a/6b working end to end in both schemes. First `AppConfiguration` reviewed: works on the happy path; needs throwing init from a dictionary, no silent environment fallback, empty-string and URL validation.
-- 2026-10-06 — Second `AppConfiguration` review: structure now right (throws, dictionary in, raw-value enum, helper). Remaining: empty-string check, key name in errors, scheme/host check, error enum shape, naming, bundle entry; build broken by a stale call in `ContentView`.
-- 2026-10-06 — Asked for and received the reference solution for `AppConfiguration` after two review rounds. To apply and commit.
-- 2026-10-06 — Task 6 complete and verified in both schemes. Task 7 defined; dependency-access question (A/B/C) open.
-- 2026-10-06 — Committed task 6. Chose option C for dependency access (decision 7). First pass at task 7 reviewed: error is printed instead of stopping the app; container empty and not stored.
-- 2026-10-06 — Task 7 second review: container type done; entry point still prints instead of stopping and does not store the container.
-- 2026-10-06 — Task 7 third review: entry point and container correct. Remaining: broken preview sample, display the values, single catch. Discussed `@Environment`: deferred to the theme in Phase 3.
-- 2026-10-06 — Task 7.4 verified: launching with an empty secret stops the app and names `API_SECRET_KEY`. Remaining: show values on screen, tidy the sample and catches, commit.
-- 2026-10-06 — Task 7 committed and pushed: container, entry point, launch failure and initializer injection all working. Two small `ContentView`/`catch` fixes left. Task 8 (tests) defined.
-- 2026-10-06 — Added the unit test target and a first passing test. Diagnosed two issues: test target deployment target 26.5 vs 26.3.1 simulators, and default main-actor isolation forcing `await` on value types.
-- 2026-10-06 — At my request the mentor made the remaining Phase 0 changes: unified deployment target (17.0 at project level), `nonisolated` on the config types, and the full `AppConfiguration` test suite (18 cases passing). Phase 0 complete pending commit.
-- 2026-10-06 — Phase 0 committed and pushed. Handoff file copied into the iOS repo (`docs/`). Phase 1 started: re-read the Flutter API layer and added three contract details (URL shape, `accountId` as a GET query item, body `status` 401/422). Answered the three design questions (enum, client holds session, transport protocol); mentor agreed on the third and proposed decisions 8 and 9 instead of my first two. Unit 1.1 tasks and test scenarios defined; no code yet.
-- 2026-10-11 — Accepted decisions 8 and 9. Secret key not available yet; placeholder stays. Mentor guides me through creating the `Core` package; I create `Networking` on my own.
-- 2026-10-12 — Created the `Core` and `Networking` local packages after three attempts. Learned: folder on disk, project reference and target link are three separate things; never move a package by dragging; a leading `/` in a package path is absolute; Xcode can mask a wrong local path, so check with `swift package resolve`; do not name a type after its module; `public struct` needs a `public init`. Unit 1.1 (request building) starts next.
+- 2026-10-06 — Phase 0 completed, verified, and committed.
+- 2026-10-11 — Accepted decisions 8 and 9.
+- 2026-10-12 — Created `Core` and `Networking` packages with Swift 6 and iOS 17.
+- 2026-10-14 — Drafted `RequestBuilder`. Received live `/initial` payload. Designed generic `APIResponse<T>` envelope.
+- 2026-10-15 — Completed Unit 1.1: `RequestBuilder`, `InitialData` DTOs, and full `RequestBuilderTests` suite passing. Implemented Unit 1.2: `HTTPTransport`, `TestTransport`, and `NetworkClient`. Inverted HTTP 401 guard fixed. Ready for `NetworkClientTests`.
+
