@@ -8,7 +8,7 @@
 import Foundation
 
 public
-struct HomeSettings: Codable {
+struct HomeSettings: Codable, Sendable{
     let homeSettingsId: Int?
     let fKAccountsId: Int?
     let homeSettingsDevice: String?

@@ -27,20 +27,37 @@ public struct RequestBuilder: Sendable {
 
 
     public func buildURLRequest<Response>(for endpoint: Endpoint<Response>, language: String, token: String? = nil, deviceID: String? = nil) throws -> URLRequest {
-        guard  let  urlComponents =  URLComponents(url: apiConfig.baseURL, resolvingAgainstBaseURL: true) else {
-            throw NetworkError.invalidURL
-        }
-
-        guard var url = urlComponents.url else {
+        
+        let url = apiConfig.baseURL
+            .appending(path: language)
+            .appending(path: "api")
+            .appending(path: apiConfig.apiVersion)
+            .appending(path: endpoint.path)
+  
+        guard  var  components =  URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             throw NetworkError.invalidURL
         }
         
-       
-         
+        var queries = endpoint.queries
 
-        var request = URLRequest(url: url)
+        if  endpoint.method == .get  {
+            queries
+                .append(
+                    URLQueryItem(name: "account_id", value: apiConfig.accountId)
+                )
+        }
+        
+        if !queries.isEmpty {
+            components.queryItems = queries
+        }
+        
+        guard let finalURL = components.url else {
+            throw NetworkError.invalidURL
+        }
+        
+        var request = URLRequest(url: finalURL)
         request.httpMethod = endpoint.method.rawValue
-        request.url?.append(path: endpoint.path)
+     
         request.timeoutInterval = 30.0
         request.setValue(acceptValue, forHTTPHeaderField: acceptHeaderKey)
         request.setValue(apiConfig.secretKey, forHTTPHeaderField: secretHeaderKey)
@@ -49,6 +66,7 @@ public struct RequestBuilder: Sendable {
         
         if let body = endpoint.body,  !body.isEmpty {
             request.setValue(acceptValue, forHTTPHeaderField: contentHeaderKey)
+            request.httpBody = body
         }
 
         if let token,  !token.isEmpty {
@@ -56,9 +74,8 @@ public struct RequestBuilder: Sendable {
         }
 
         if let deviceID, !deviceID.isEmpty {
-                request.setValue("\(deviceID)", forHTTPHeaderField: deviceIdHeaderKey)
+            request.setValue(deviceID, forHTTPHeaderField: deviceIdHeaderKey)
         }
-
 
 
        return request

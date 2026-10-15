@@ -9,7 +9,7 @@ import Foundation
 
 
 
-public struct Payments: Codable {
+public struct Payments: Codable, Sendable {
     let paymentsId: Int?
     let fKAccountsId: Int?
     let paymentsSlug: String?

@@ -8,6 +8,8 @@
 import Foundation
 
 
-extension Endpoint where Response == {
-    
+extension Endpoint where Response == InitialData {
+    public static var initial: Endpoint {
+        Endpoint(path: "initial")
+    }
 }

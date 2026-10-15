@@ -19,21 +19,13 @@ public struct Endpoint<Response: Decodable & Sendable> : Sendable {
     public init(
         path: String,
         method: HTTPMethod = .get,
-        query: [URLQueryItem] = [],
+        queries: [URLQueryItem] = [],
         body: Data? = nil
     ) {
         self.path = path
         self.method = method
-        self.queries = query
+        self.queries = queries
         self.body = body
     }
-    
-//    static let questions = Endpoint<>(path: "Question")
-}
 
-
-extension Endpoint where Response == ConcreteType {
-    public static var endpointName: Endpoint {
-        Endpoint(path: )
-    }
 }

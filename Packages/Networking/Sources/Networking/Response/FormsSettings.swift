@@ -8,7 +8,7 @@
 import Foundation
 
 public
- struct FormsSettingsFields: Codable {
+struct FormsSettingsFields: Codable, Sendable {
     let name: String?
     let type: String?
     let validation: String?
@@ -16,7 +16,7 @@ public
 
 
 public
-struct Names: Codable {
+struct Names: Codable, Sendable {
     let name: String?
     let phone: String?
     let mail: String?
@@ -26,7 +26,7 @@ struct Names: Codable {
 
 
 public
-struct Subject: Codable {
+struct Subject: Codable, Sendable {
     let inquiry: String?
     let complaint: String?
     let suggestion: String?
@@ -34,18 +34,18 @@ struct Subject: Codable {
 
 
 public
-struct Options: Codable {
+struct Options: Codable, Sendable {
     let subject: Subject?
 }
 
 public
-struct FormsSettingsFieldsTrans: Codable {
+struct FormsSettingsFieldsTrans: Codable, Sendable {
     let names: Names?
     let options: Options?
 }
 
 public
-struct FormsSettings: Codable {
+struct FormsSettings: Codable, Sendable {
     let formsSettingsId: Int?
     let fKAccountsId: Int?
     let formsSettingsFields: [FormsSettingsFields?]

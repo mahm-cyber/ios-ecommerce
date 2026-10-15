@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct AccountData: Codable {
+struct AccountData: Codable, Sendable {
     let accountsId: Int?
     let accountsName: String?
     let accountsSlug: String?

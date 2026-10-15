@@ -9,10 +9,10 @@ import Foundation
 
 
 
-struct Categories: Codable {
+struct Categories: Codable, Sendable {
     let categoriesId: Int?
     let categoriesCode: String?
-    let categoriesParentId: String?
+    let categoriesParentId: Int?
     let categoriesImg: String?
     let categoriesBannerImg: String?
     let categoriesWebBannerImg: String?
@@ -20,7 +20,7 @@ struct Categories: Codable {
     let categoriesShowInMenu: String?
     let categoriesTitle: String?
     let categoriesSlug: String?
-    let subcategories: [Categories?]
+    let subcategories: [Categories]?
 
     enum CodingKeys: String, CodingKey {
         case categoriesId = "categories_id"

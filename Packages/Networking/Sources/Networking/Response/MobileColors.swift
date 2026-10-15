@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct MobileAppColors: Codable {
+struct MobileAppColors: Codable, Sendable {
     let accountsColorsId: Int?
     let fKAccountsId: Int?
     let accountsColorsType: String?

@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct Data: Codable {
+public struct InitialData: Codable, Sendable {
     let version: Int?
     let account: AccountData?
     let info: Info?

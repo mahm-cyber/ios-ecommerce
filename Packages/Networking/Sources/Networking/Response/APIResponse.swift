@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct APIResponse<Data: Decodable & Sendable>: Decodable, Sendable {
+public struct APIResponse<T: Decodable & Sendable>: Decodable, Sendable {
     public let status: Int
     public let message: String?
-    public let data: Data?
+    public let data: T?
     
     
 }

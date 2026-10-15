@@ -8,7 +8,7 @@
 import Foundation
 
 public
-struct Setting: Codable {
+struct Setting: Codable, Sendable {
     let settingsId: Int?
     let fKAccountsId: Int?
     let settingsDefaultLanguage: String?
