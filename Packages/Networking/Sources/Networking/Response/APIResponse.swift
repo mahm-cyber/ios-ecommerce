@@ -11,6 +11,6 @@ public struct APIResponse<T: Decodable & Sendable>: Decodable, Sendable {
     public let status: Int
     public let message: String?
     public let data: T?
-    
-    
+    public let errors: ServerErrorPayload?
+
 }

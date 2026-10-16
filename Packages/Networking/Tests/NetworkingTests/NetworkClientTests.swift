@@ -208,5 +208,52 @@ struct NetworkClientTests {
     }
 
 
+    @Test("HTTP 500 Server Error without decoding")
+    func http500ThrowsServerError() async throws {
+        let transport = TestTransport.returning(statusCode: 500, data: Data("<html>500 Internal Server Error</html>".utf8))
+        let client = makeNetworkClient(transport: transport)
 
+        await #expect(throws: NetworkError.serverError(statusCode: 500, message: nil)) {
+            try await client.send(endpoint)
+        }
+    }
+
+    @Test("HTTP 200 containing errors field")
+    func envelopeWithErrorsThrowsServerError() async throws {
+        let json = """
+        {
+            "status": 200,
+            "message": "Failed",
+            "errors": ["Item is out of stock"],
+            "data": null
+        }
+        """
+        let data = Data(json.utf8)
+        let transport = TestTransport.returning(statusCode: 200, data: data)
+        let client = makeNetworkClient(transport: transport)
+
+        await #expect(throws: NetworkError.serverError(statusCode: 200, message: "Item is out of stock")) {
+            try await client.send(endpoint)
+        }
+    }
+
+    @Test("Offline throws noInternet")
+    func offlineThrowsNoInternet() async throws {
+        let transport = TestTransport { _ in throw URLError(.notConnectedToInternet) }
+        let client = makeNetworkClient(transport: transport)
+
+        await #expect(throws: NetworkError.noInternet) {
+            try await client.send(endpoint)
+        }
+    }
+
+    @Test("Timeout throws timeout")
+    func timeoutThrowsTimeout() async throws {
+        let transport = TestTransport { _ in throw URLError(.timedOut) }
+        let client = makeNetworkClient(transport: transport)
+
+        await #expect(throws: NetworkError.timeout) {
+            try await client.send(endpoint)
+        }
+    }
 }

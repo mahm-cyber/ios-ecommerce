@@ -14,4 +14,6 @@ public enum NetworkError: Error, Sendable, Equatable {
     case invalidURL
     case sessionExpired
     case noData
+    case noInternet
+    case timeout
 }

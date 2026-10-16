@@ -43,21 +43,47 @@ public struct NetworkClient: Sendable{
             deviceID: deviceIDSupplier()
         )
         
-        let (data, response) = try await transport.send(request)
-        
+        let (data, response): (Data, URLResponse)
+        do {
+             (data, response) =  try await transport.send(request)
+        } catch let urlError as URLError {
+            switch urlError.code {
+            case .notConnectedToInternet, .networkConnectionLost:
+                throw NetworkError.noInternet
+            case .timedOut:
+                throw NetworkError.timeout
+            default:
+                throw urlError
+            }
+        }
+
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
         }
-        
+
         if httpResponse.statusCode == 401 {
             throw NetworkError.sessionExpired
         }
-        
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw NetworkError.serverError(
+                statusCode: httpResponse.statusCode,
+                message: nil
+            )
+        }
+
         let envelope = try decoder.decode(
             APIResponse<Response>.self,
             from: data
         )
-        
+
+        if let serverErrors = envelope.errors, !serverErrors.error.isEmpty {
+            throw NetworkError.serverError(
+                statusCode: envelope.status,
+                message: serverErrors.error
+            )
+        }
+
         if envelope.status == 401 {
             throw NetworkError.sessionExpired
         }
