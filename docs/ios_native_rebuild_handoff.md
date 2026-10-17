@@ -207,49 +207,28 @@ Concepts to learn for this phase: target vs build configuration vs scheme; xccon
 
 ## 7. Current status
 
-**Phase 0 is complete, committed and pushed. Phase 1 (networking) has started: the design is explained and the decisions are proposed; no Phase 1 code is written yet.**
+**Phase 0 and Phase 1 are complete. Phase 2 (Session, `/initial` bootstrap & splash) is in progress: Unit 2.1 (Local Storage in `Packages/Data`) is complete and verified.**
 
-The Xcode project is at `~/Desktop/ios-ecommerce/IOS-ECommerce/IOS-ECommerce.xcodeproj` (Xcode 26.6). Targets: app `IOS-ECommerce` (module `IOS_Ecommerce`) and unit tests `IOS EcommerceTests` (Swift Testing, hosted by the app). Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`. This handoff file now lives in that repo at `docs/ios_native_rebuild_handoff.md`; the copy in the Flutter repo is older.
+Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`.
 
-What exists and is verified (tests pass on an iOS 26.3.1 simulator with the Dev scheme; Prod builds):
-
-- Configurations `Debug-Dev`, `Release-Dev`, `Debug-Prod`, `Release-Prod`; shared schemes `IOS-ECommerce-Dev` / `IOS-ECommerce-Prod`, both with the test target in their Test action.
-- `Configuration/Base.xcconfig`, `Dev.xcconfig`, `Prod.xcconfig`, git-ignored `Secrets.xcconfig`; six settings reach the app through `Configuration/Info.plist`: `APP_ENVIRONMENT`, `API_BASE_URL`, `API_VERSION`, `API_ACCOUNT_ID`, `BRAND_SLUG`, `API_SECRET_KEY`.
-- Deployment target is iOS 17.0, set once at the project level; neither target overrides it.
-- `Configuration/AppConfiguration.swift`, `IOS-ECommerce/Composition/AppContainer.swift`, `IOS_ECommerceApp`, `ContentView` (initializer injection, decision 7).
-- `IOS EcommerceTests/AppConfigurationTests.swift`: 11 test functions, 18 cases, all passing.
+What exists and is verified:
+- **Phase 0:** Configurations, schemes, xcconfigs, Info.plist substitution, `AppConfiguration`, `AppContainer`, Swift Testing suite (18 cases passing).
+- **Phase 1 (Networking):** `Core` (errors), `Networking` (`HTTPMethod`, `RequestBuilder`, `Endpoint<T>`, `APIResponse<T>`, `ServerErrorPayload`, `HTTPTransport`, `TestTransport`, `NetworkClient` with session supplier closures and status check). All tests passing.
+- **Phase 2 (Unit 2.1 - Local Storage in `Packages/Data`):**
+  - `PreferenceStorage` protocol and `AppPreferenceStorage` (`@unchecked Sendable`, backed by `UserDefaults` with `isFirstRun` defaulting to true, `deviceID` lazy generation & persistence, `selectedLanguage` with device locale fallback).
+  - `KeychainStorage` protocol, `SystemKeychainStorage` (`@unchecked Sendable`, backed by native `Security` framework with `SecItemAdd`, `SecItemCopyMatching`, `SecItemDelete`, `wipeAll`, `service` namespace), and `KeychainStorage` string extension helpers.
+  - Test fakes: `TestPreferenceStorage` and `TestKeychainStorage`.
+  - Swift Testing test suites: `AppPreferenceStorageTests` and `KeychainStorageTests`.
 
 Who wrote what, so the next mentor knows what I have and have not practised:
+- Phase 0: I wrote config, schemes, container, app entry, single-assert test. Given on request: final `AppConfiguration`, test cases, nonisolated cleanup.
+- Phase 1: I wrote `RequestBuilder`, `Endpoint`, `/initial` DTOs, `APIResponse`, `NetworkClient`, and the test suites (`HTTPMethodTests`, `RequestBuilderTests`, `NetworkClientTests`).
+- Phase 2 (Unit 2.1): I wrote `PreferenceStorage`, `AppPreferenceStorage` (computed properties & `UserDefaults`), `KeychainError`, `SystemKeychainStorage` (Security framework queries, pointer matching, status code handling), and `KeychainStorage` string helpers. Given on request: `TestPreferenceStorage`, `TestKeychainStorage`, and test suites.
 
-- I wrote, with review: the Xcode configuration, xcconfigs, Info.plist, `AppContainer`, the `App` entry point, `ContentView`, and a first single-assert test.
-- Given to me on request: the final `AppConfiguration`, the full test file, the `nonisolated` annotations and the deployment-target cleanup.
-- So I have **not yet written on my own**: failure-path tests with `#expect(throws:)`, parameterized tests, or a throwing initializer with a validation helper. Phase 1 tests are mine to write unaided.
-
-Phase 1 layout (packages are created in this phase):
-
-```
-Packages/
-├── Core/                 errors shared by every layer; imports nothing
-└── Networking/           depends on Core only
-    ├── Sources/Networking/{Request, Response, Client}
-    └── Tests/NetworkingTests/
-```
-
-Local packages default to no actor isolation, so the `nonisolated` annotations needed in the app target (`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`) are not needed there.
-
-Phase 1 flow: build `URLRequest` → send → map transport failure → check HTTP status (401 or 302-to-login = session expired, 422 = validation, 409 = conflict) → decode envelope → check body `errors` / `status` → decode `data`. The client only reports "session expired" as an error; who reacts is Phase 2.
-
-Declined or deferred (do not re-raise unless it causes a problem): wrapping the sample in `#if DEBUG`; renaming `API_BASE_URL` (it holds `/host`, the plist adds `https:/`); moving `AppConfiguration.swift` out of the non-target `Configuration` folder. `@Environment` is deferred to the theme in Phase 3.
-
-Still needed before Phase 1 can make a real request: the real Cuddluxe secret key in `Secrets.xcconfig`. I do not have it yet (2026-10-11); the placeholder `EmptyKey` stays, because a truly empty value stops the app at launch. Everything up to the first live request is tested with a fake transport, so this does not block Phase 1.
-
-My next actions:
-
-1. (Done 2026-10-15: Unit 1.1 complete. `APIConfiguration`, `HTTPMethod`, `Endpoint<Response>`, and `RequestBuilder` fully implemented. Full `RequestBuilderTests` suite written and passing).
-2. (Done 2026-10-15: Modeled `/initial` DTOs and `APIResponse<T>` generic envelope).
-3. (Done 2026-10-15: Implemented `HTTPTransport` protocol, `URLSession` conformance, and `TestTransport` fake).
-4. (Done 2026-10-15: Implemented `NetworkClient` with session supplier closures, HTTP validation, envelope decoding, and unwrapping).
-5. At home: Write `NetworkClientTests.swift` testing happy path (200), HTTP 401, envelope 401, and server error handling using `TestTransport`.
+My next actions (Unit 2.2):
+1. Wire `PreferenceStorage` and `KeychainStorage` into `AppContainer.swift`.
+2. Implement first-launch Keychain wipe logic in the composition root / bootstrap (`isFirstRun == true` -> `keychainStorage.wipeAll()`, then set `isFirstRun = false`).
+3. Connect `NetworkClient` session supplier closures to read current `selectedLanguage`, `deviceID`, and `authToken` from `PreferenceStorage` and `KeychainStorage`.
 
 ---
 
@@ -263,4 +242,7 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-12 — Created `Core` and `Networking` packages with Swift 6 and iOS 17.
 - 2026-10-14 — Drafted `RequestBuilder`. Received live `/initial` payload. Designed generic `APIResponse<T>` envelope.
 - 2026-10-15 — Completed Unit 1.1: `RequestBuilder`, `InitialData` DTOs, and full `RequestBuilderTests` suite passing. Implemented Unit 1.2: `HTTPTransport`, `TestTransport`, and `NetworkClient`. Inverted HTTP 401 guard fixed. Ready for `NetworkClientTests`.
+- 2026-10-16 — Phase 1 complete (`NetworkClientTests` passing). Created `Packages/Data` local package, linked to Xcode project.
+- 2026-10-17 — Unit 2.1 complete: Implemented `AppPreferenceStorage` (UserDefaults) and `SystemKeychainStorage` (Security framework). Added in-memory fakes and Swift Testing suites (`AppPreferenceStorageTests`, `KeychainStorageTests`). Verified clean build.
+
 
