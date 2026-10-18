@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  InitialData.swift
 //  Networking
 //
 //  Created by NamaaIT Apple3 on 14/10/2026.
@@ -7,22 +7,53 @@
 
 import Foundation
 
-
 public struct InitialData: Codable, Sendable {
-    let version: Int?
-    let account: AccountData?
-    let info: Info?
-    let setting: Setting?
-    let promotionalMessages: [PromotionalMessages?]
-    let defaultLang: String?
-    let payments: [Payments?]
-    let categories: [Categories?]
-    let offerMagazine: String?
-    let haveBranch: Bool?
-    let hasOffers: Bool?
-    let formsSettings: [FormsSettings?]
-    let homeSettings: [HomeSettings?]
-    let allowedCountries: String?
+    public let version: Int?
+    public let account: AccountData?
+    public let info: Info?
+    public let setting: Setting?
+    public let promotionalMessages: [PromotionalMessages?]?
+    public let defaultLang: String?
+    public let payments: [Payments?]?
+    public let categories: [Categories?]?
+    public let offerMagazine: String?
+    public let haveBranch: Bool?
+    public let hasOffers: Bool?
+    public let formsSettings: [FormsSettings?]?
+    public let homeSettings: [HomeSettings?]?
+    public let allowedCountries: String?
+
+    public init(
+        version: Int? = nil,
+        account: AccountData? = nil,
+        info: Info? = nil,
+        setting: Setting? = nil,
+        promotionalMessages: [PromotionalMessages?]? = nil,
+        defaultLang: String? = nil,
+        payments: [Payments?]? = nil,
+        categories: [Categories?]? = nil,
+        offerMagazine: String? = nil,
+        haveBranch: Bool? = nil,
+        hasOffers: Bool? = nil,
+        formsSettings: [FormsSettings?]? = nil,
+        homeSettings: [HomeSettings?]? = nil,
+        allowedCountries: String? = nil
+    ) {
+        self.version = version
+        self.account = account
+        self.info = info
+        self.setting = setting
+        self.promotionalMessages = promotionalMessages
+        self.defaultLang = defaultLang
+        self.payments = payments
+        self.categories = categories
+        self.offerMagazine = offerMagazine
+        self.haveBranch = haveBranch
+        self.hasOffers = hasOffers
+        self.formsSettings = formsSettings
+        self.homeSettings = homeSettings
+        self.allowedCountries = allowedCountries
+    }
 
     enum CodingKeys: String, CodingKey {
         case version

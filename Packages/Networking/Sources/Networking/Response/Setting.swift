@@ -9,68 +9,197 @@ import Foundation
 
 public
 struct Setting: Codable, Sendable {
-    let settingsId: Int?
-    let fKAccountsId: Int?
-    let settingsDefaultLanguage: String?
-    let allowBrowserLang: Int?
-    let settingsPaginationCount: Int?
-    let settingsPaginationCountDashboard: Int?
-    let durationNewlyArrivedProducts: Int?
-    let productCardImageHeightWeb: Int?
-    let productCardImageHeightMobile: Int?
-    let inactiveCustomerDays: Int?
-    let settingsDeliveryCost: Int?
-    let walletRegistrationBonus: String?
-    let cashbackValue: Int?
-    let allowCashbackOnDiscountedProducts: Int?
-    let allowCashbackOnCoupons: Int?
-    let packagingWeight: String?
-    let taxNumber: String?
-    let taxValue: String?
-    let commercialRecord: String?
-    let settingsMinOrder: String?
-    let stopOrder: Int?
-    let websiteStatus: Int?
-    let accountsEmail: String?
-    let schedulingTimeFrom: String?
-    let schedulingTimeTo: String?
-    let clientsCodeType: String?
-    let clientsCodeValue: String?
-    let clientsCodeLimit: String?
-    let clientsCodeAmount: String?
-    let robotTxt: String?
-    let llmsTxt: String?
-    let sitemap: String?
-    let maroofNo: String?
-    let vatFile: String?
-    let gtagsId: String?
-    let gtagsConversionSendTo: String?
-    let gtmId: String?
-    let clarityId: String?
-    let googleSiteVerification: String?
-    let facebookDomainVerification: String?
-    let snapPixelId: String?
-    let headScript: String?
-    let bodyScript: String?
-    let menuShowLang: String?
-    let addressFields: String?
-    let iosVersion: String?
-    let androidVersion: String?
-    let settingsCreatedAt: String?
-    let settingsUpdatedAt: String?
-    let showProductAssociationsInProductDetails: Int?
-    let showProductAssociationsInCart: Int?
-    let acceptReturnPolicy: Int?
-    let currencyDirection: String?
-    let settingsDeliveryCostNew: String?
-    let settingsCurrency: String?
-    let orderTimeMsg: String?
-    let stopOrderMsg: String?
-    let stopWebsiteMsg: String?
-    let homeProductsTitle: String?
-    let accountsName: String?
-    let cartNotes: String?
-    let contentScrollingBanner: [String?]
+    public let settingsId: Int?
+    public let fKAccountsId: Int?
+    public let settingsDefaultLanguage: String?
+    public let allowBrowserLang: Int?
+    public let settingsPaginationCount: Int?
+    public let settingsPaginationCountDashboard: Int?
+    public let durationNewlyArrivedProducts: Int?
+    public let productCardImageHeightWeb: Int?
+    public let productCardImageHeightMobile: Int?
+    public let inactiveCustomerDays: Int?
+    public let settingsDeliveryCost: Int?
+    public let walletRegistrationBonus: String?
+    public let cashbackValue: Int?
+    public let allowCashbackOnDiscountedProducts: Int?
+    public let allowCashbackOnCoupons: Int?
+    public let packagingWeight: String?
+    public let taxNumber: String?
+    public let taxValue: String?
+    public let commercialRecord: String?
+    public let settingsMinOrder: String?
+    public let stopOrder: Int?
+    public let websiteStatus: Int?
+    public let accountsEmail: String?
+    public let schedulingTimeFrom: String?
+    public let schedulingTimeTo: String?
+    public let clientsCodeType: String?
+    public let clientsCodeValue: String?
+    public let clientsCodeLimit: String?
+    public let clientsCodeAmount: String?
+    public let robotTxt: String?
+    public let llmsTxt: String?
+    public let sitemap: String?
+    public let maroofNo: String?
+    public let vatFile: String?
+    public let gtagsId: String?
+    public let gtagsConversionSendTo: String?
+    public let gtmId: String?
+    public let clarityId: String?
+    public let googleSiteVerification: String?
+    public let facebookDomainVerification: String?
+    public let snapPixelId: String?
+    public let headScript: String?
+    public let bodyScript: String?
+    public let menuShowLang: String?
+    public let addressFields: String?
+    public let iosVersion: String?
+    public let androidVersion: String?
+    public let settingsCreatedAt: String?
+    public let settingsUpdatedAt: String?
+    public let showProductAssociationsInProductDetails: Int?
+    public let showProductAssociationsInCart: Int?
+    public let acceptReturnPolicy: Int?
+    public let currencyDirection: String?
+    public let settingsDeliveryCostNew: String?
+    public let settingsCurrency: String?
+    public let orderTimeMsg: String?
+    public let stopOrderMsg: String?
+    public let stopWebsiteMsg: String?
+    public let homeProductsTitle: String?
+    public let accountsName: String?
+    public let cartNotes: String?
+    public let contentScrollingBanner: [String?]?
+
+
+    public init(
+        settingsId: Int? = nil,
+        fKAccountsId: Int? = nil,
+        settingsDefaultLanguage: String? = nil,
+        allowBrowserLang: Int? = nil,
+        settingsPaginationCount: Int? = nil,
+        settingsPaginationCountDashboard: Int? = nil,
+        durationNewlyArrivedProducts: Int? = nil,
+        productCardImageHeightWeb: Int? = nil,
+        productCardImageHeightMobile: Int? = nil,
+        inactiveCustomerDays: Int? = nil,
+        settingsDeliveryCost: Int? = nil,
+        walletRegistrationBonus: String? = nil,
+        cashbackValue: Int? = nil,
+        allowCashbackOnDiscountedProducts: Int? = nil,
+        allowCashbackOnCoupons: Int? = nil,
+        packagingWeight: String? = nil,
+        taxNumber: String? = nil,
+        taxValue: String? = nil,
+        commercialRecord: String? = nil,
+        settingsMinOrder: String? = nil,
+        stopOrder: Int? = nil,
+        websiteStatus: Int? = nil,
+        accountsEmail: String? = nil,
+        schedulingTimeFrom: String? = nil,
+        schedulingTimeTo: String? = nil,
+        clientsCodeType: String? = nil,
+        clientsCodeValue: String? = nil,
+        clientsCodeLimit: String? = nil,
+        clientsCodeAmount: String? = nil,
+        robotTxt: String? = nil,
+        llmsTxt: String? = nil,
+        sitemap: String? = nil,
+        maroofNo: String? = nil,
+        vatFile: String? = nil,
+        gtagsId: String? = nil,
+        gtagsConversionSendTo: String? = nil,
+        gtmId: String? = nil,
+        clarityId: String? = nil,
+        googleSiteVerification: String? = nil,
+        facebookDomainVerification: String? = nil,
+        snapPixelId: String? = nil,
+        headScript: String? = nil,
+        bodyScript: String? = nil,
+        menuShowLang: String? = nil,
+        addressFields: String? = nil,
+        iosVersion: String? = nil,
+        androidVersion: String? = nil,
+        settingsCreatedAt: String? = nil,
+        settingsUpdatedAt: String? = nil,
+        showProductAssociationsInProductDetails: Int? = nil,
+        showProductAssociationsInCart: Int? = nil,
+        acceptReturnPolicy: Int? = nil,
+        currencyDirection: String? = nil,
+        settingsDeliveryCostNew: String? = nil,
+        settingsCurrency: String? = nil,
+        orderTimeMsg: String? = nil,
+        stopOrderMsg: String? = nil,
+        stopWebsiteMsg: String? = nil,
+        homeProductsTitle: String? = nil,
+        accountsName: String? = nil,
+        cartNotes: String? = nil,
+        contentScrollingBanner: [String?]? = nil
+    ) {
+        self.settingsId = settingsId
+        self.fKAccountsId = fKAccountsId
+        self.settingsDefaultLanguage = settingsDefaultLanguage
+        self.allowBrowserLang = allowBrowserLang
+        self.settingsPaginationCount = settingsPaginationCount
+        self.settingsPaginationCountDashboard = settingsPaginationCountDashboard
+        self.durationNewlyArrivedProducts = durationNewlyArrivedProducts
+        self.productCardImageHeightWeb = productCardImageHeightWeb
+        self.productCardImageHeightMobile = productCardImageHeightMobile
+        self.inactiveCustomerDays = inactiveCustomerDays
+        self.settingsDeliveryCost = settingsDeliveryCost
+        self.walletRegistrationBonus = walletRegistrationBonus
+        self.cashbackValue = cashbackValue
+        self.allowCashbackOnDiscountedProducts = allowCashbackOnDiscountedProducts
+        self.allowCashbackOnCoupons = allowCashbackOnCoupons
+        self.packagingWeight = packagingWeight
+        self.taxNumber = taxNumber
+        self.taxValue = taxValue
+        self.commercialRecord = commercialRecord
+        self.settingsMinOrder = settingsMinOrder
+        self.stopOrder = stopOrder
+        self.websiteStatus = websiteStatus
+        self.accountsEmail = accountsEmail
+        self.schedulingTimeFrom = schedulingTimeFrom
+        self.schedulingTimeTo = schedulingTimeTo
+        self.clientsCodeType = clientsCodeType
+        self.clientsCodeValue = clientsCodeValue
+        self.clientsCodeLimit = clientsCodeLimit
+        self.clientsCodeAmount = clientsCodeAmount
+        self.robotTxt = robotTxt
+        self.llmsTxt = llmsTxt
+        self.sitemap = sitemap
+        self.maroofNo = maroofNo
+        self.vatFile = vatFile
+        self.gtagsId = gtagsId
+        self.gtagsConversionSendTo = gtagsConversionSendTo
+        self.gtmId = gtmId
+        self.clarityId = clarityId
+        self.googleSiteVerification = googleSiteVerification
+        self.facebookDomainVerification = facebookDomainVerification
+        self.snapPixelId = snapPixelId
+        self.headScript = headScript
+        self.bodyScript = bodyScript
+        self.menuShowLang = menuShowLang
+        self.addressFields = addressFields
+        self.iosVersion = iosVersion
+        self.androidVersion = androidVersion
+        self.settingsCreatedAt = settingsCreatedAt
+        self.settingsUpdatedAt = settingsUpdatedAt
+        self.showProductAssociationsInProductDetails = showProductAssociationsInProductDetails
+        self.showProductAssociationsInCart = showProductAssociationsInCart
+        self.acceptReturnPolicy = acceptReturnPolicy
+        self.currencyDirection = currencyDirection
+        self.settingsDeliveryCostNew = settingsDeliveryCostNew
+        self.settingsCurrency = settingsCurrency
+        self.orderTimeMsg = orderTimeMsg
+        self.stopOrderMsg = stopOrderMsg
+        self.stopWebsiteMsg = stopWebsiteMsg
+        self.homeProductsTitle = homeProductsTitle
+        self.accountsName = accountsName
+        self.cartNotes = cartNotes
+        self.contentScrollingBanner = contentScrollingBanner
+    }
 
     enum CodingKeys: String, CodingKey {
         case settingsId = "settings_id"

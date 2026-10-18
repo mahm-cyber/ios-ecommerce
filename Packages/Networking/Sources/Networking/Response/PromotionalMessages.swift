@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PromotionalMessages: Codable {
+public struct PromotionalMessages: Codable, Sendable {
     let promotionalMessagesId: Int?
     let fKAccountsId: Int?
     let promotionalMessagesIcon: String?

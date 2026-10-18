@@ -8,98 +8,285 @@
 import Foundation
 
 
-struct AccountData: Codable, Sendable {
-    let accountsId: Int?
-    let accountsName: String?
-    let accountsSlug: String?
-    let accountsImgDashboard: String?
-    let accountsImgRtl: String?
-    let accountsImgLtr: String?
-    let accountsImgFavicon: String?
-    let accountsImgHeaderReverse: String?
-    let accountsShowBranches: String?
-    let accountsShowHierarchy: String?
-    let accountsShowAreas: String?
-    let accountsShowCoupons: String?
-    let accountsShowShippingMethods: String?
-    let accountsShowOrdersRatings: String?
-    let accountsSingleMenu: String?
-    let accountsCountry: String?
-    let accountsCountryCode: String?
-    let accountsMultipleCountries: String?
-    let accountsCountryMobileDigitsCount: Int?
-    let accountsTimezone: String?
-    let accountsCountryLatLong: String?
-    let accountsNoreplyEmail: String?
-    let accountsShowCalories: String?
-    let accountsShowProductType: String?
-    let accountsShowTestimonials: String?
-    let accountsShowQuestions: String?
-    let accountsShowPartners: String?
-    let accountsShowNews: String?
-    let accountsShowJobs: String?
-    let accountsShowArticles: String?
-    let accountsShowAlbums: String?
-    let accountsShowWallet: String?
-    let accountsShowLostSales: String?
-    let accountsShowPointsLevels: String?
-    let accountsShowChoices: String?
-    let accountsShowProductsNotifications: String?
-    let accountsShowProductsRatings: String?
-    let accountsShowProductsFiles: String?
-    let accountsShowProductDeliveryPeriod: String?
-    let accountsShowOffersMagazines: String?
-    let accountsShowBrands: String?
-    let accountsShowBrandPage: String?
-    let accountsShowOffers: String?
-    let accountsShowImportLogs: String?
-    let accountsShowStocks: String?
-    let accountsShowOrderShippings: String?
-    let accountsShowOrderReturnRequests: String?
-    let accountsShowPromotionalMessages: String?
-    let accountsShowPoints: String?
-    let accountsShowSimilarItems: String?
-    let accountsShowProductAssociations: String?
-    let accountsShowAttributes: String?
-    let accountsShowUploads: String?
-    let accountsShowDailyOffers: String?
-    let accountsShowHomeSettings: String?
-    let accountsShowAdvertisementsSettings: String?
-    let accountsMultiPriceForProduct: String?
-    let accountsMultiPayments: String?
-    let accountsOrdersScheduling: String?
-    let accountsOrdersPickup: String?
-    let accountsShowCashback: String?
-    let accountsShowOurClients: String?
-    let accountsOffersType: String?
-    let accountsShowBi: String?
-    let accountsFcmKey: String?
-    let accountsFcmApiKey: String?
-    let accountsFcmAuthDomain: String?
-    let accountsFcmDatabaseURL: String?
-    let accountsFcmProjectId: String?
-    let accountsFcmStorageBucket: String?
-    let accountsFcmMessagingSenderId: String?
-    let accountsFcmAppId: String?
-    let accountsFcmMeasurementId: String?
-    let accountsAndroidUrl: String?
-    let accountsIosUrl: String?
-    let accountsProductUrl: String?
-    let accountsGoogleMapKey: String?
-    let accountsWebsiteUrl: String?
-    let accountsNumberDecimalDigits: Int?
-    let accountsStatus: String?
-    let accountsPosition: Int?
-    let accountsWebServiceToken: String?
-    let accountsSocialLoginBtns: String?
-    let accountsShowRemoveAccount: String?
-    let accountsAppTheme: String?
-    let accountsAuthType: String?
-    let accountsCreatedAt: String?
-    let accountsUpdatedAt: String?
-    let accountsShowReels: String?
-    let productsTitle: String?
-    let mobileAppColors: MobileAppColors?
+public struct AccountData: Codable, Sendable {
+    public let accountsId: Int?
+    public let accountsName: String?
+    public let accountsSlug: String?
+    public let accountsImgDashboard: String?
+    public let accountsImgRtl: String?
+    public let accountsImgLtr: String?
+    public let accountsImgFavicon: String?
+    public let accountsImgHeaderReverse: String?
+    public let accountsShowBranches: String?
+    public let accountsShowHierarchy: String?
+    public let accountsShowAreas: String?
+    public let accountsShowCoupons: String?
+    public let accountsShowShippingMethods: String?
+    public let accountsShowOrdersRatings: String?
+    public let accountsSingleMenu: String?
+    public let accountsCountry: String?
+    public let accountsCountryCode: String?
+    public let accountsMultipleCountries: String?
+    public let accountsCountryMobileDigitsCount: Int?
+    public let accountsTimezone: String?
+    public let accountsCountryLatLong: String?
+    public let accountsNoreplyEmail: String?
+    public let accountsShowCalories: String?
+    public let accountsShowProductType: String?
+    public let accountsShowTestimonials: String?
+    public let accountsShowQuestions: String?
+    public let accountsShowPartners: String?
+    public let accountsShowNews: String?
+    public let accountsShowJobs: String?
+    public let accountsShowArticles: String?
+    public let accountsShowAlbums: String?
+    public let accountsShowWallet: String?
+    public let accountsShowLostSales: String?
+    public let accountsShowPointsLevels: String?
+    public let accountsShowChoices: String?
+    public let accountsShowProductsNotifications: String?
+    public let accountsShowProductsRatings: String?
+    public let accountsShowProductsFiles: String?
+    public let accountsShowProductDeliveryPeriod: String?
+    public let accountsShowOffersMagazines: String?
+    public let accountsShowBrands: String?
+    public let accountsShowBrandPage: String?
+    public let accountsShowOffers: String?
+    public let accountsShowImportLogs: String?
+    public let accountsShowStocks: String?
+    public let accountsShowOrderShippings: String?
+    public let accountsShowOrderReturnRequests: String?
+    public let accountsShowPromotionalMessages: String?
+    public let accountsShowPoints: String?
+    public let accountsShowSimilarItems: String?
+    public let accountsShowProductAssociations: String?
+    public let accountsShowAttributes: String?
+    public let accountsShowUploads: String?
+    public let accountsShowDailyOffers: String?
+    public let accountsShowHomeSettings: String?
+    public let accountsShowAdvertisementsSettings: String?
+    public let accountsMultiPriceForProduct: String?
+    public let accountsMultiPayments: String?
+    public let accountsOrdersScheduling: String?
+    public let accountsOrdersPickup: String?
+    public let accountsShowCashback: String?
+    public let accountsShowOurClients: String?
+    public let accountsOffersType: String?
+    public let accountsShowBi: String?
+    public let accountsFcmKey: String?
+    public let accountsFcmApiKey: String?
+    public let accountsFcmAuthDomain: String?
+    public let accountsFcmDatabaseURL: String?
+    public let accountsFcmProjectId: String?
+    public let accountsFcmStorageBucket: String?
+    public let accountsFcmMessagingSenderId: String?
+    public let accountsFcmAppId: String?
+    public let accountsFcmMeasurementId: String?
+    public let accountsAndroidUrl: String?
+    public let accountsIosUrl: String?
+    public let accountsProductUrl: String?
+    public let accountsGoogleMapKey: String?
+    public let accountsWebsiteUrl: String?
+    public let accountsNumberDecimalDigits: Int?
+    public let accountsStatus: String?
+    public let accountsPosition: Int?
+    public let accountsWebServiceToken: String?
+    public let accountsSocialLoginBtns: String?
+    public let accountsShowRemoveAccount: String?
+    public let accountsAppTheme: String?
+    public let accountsAuthType: String?
+    public let accountsCreatedAt: String?
+    public let accountsUpdatedAt: String?
+    public let accountsShowReels: String?
+    public let productsTitle: String?
+    public let mobileAppColors: MobileAppColors?
+
+
+    public init(
+        accountsId: Int? = nil,
+        accountsName: String? = nil,
+        accountsSlug: String? = nil,
+        accountsImgDashboard: String? = nil,
+        accountsImgRtl: String? = nil,
+        accountsImgLtr: String? = nil,
+        accountsImgFavicon: String? = nil,
+        accountsImgHeaderReverse: String? = nil,
+        accountsShowBranches: String? = nil,
+        accountsShowHierarchy: String? = nil,
+        accountsShowAreas: String? = nil,
+        accountsShowCoupons: String? = nil,
+        accountsShowShippingMethods: String? = nil,
+        accountsShowOrdersRatings: String? = nil,
+        accountsSingleMenu: String? = nil,
+        accountsCountry: String? = nil,
+        accountsCountryCode: String? = nil,
+        accountsMultipleCountries: String? = nil,
+        accountsCountryMobileDigitsCount: Int? = nil,
+        accountsTimezone: String? = nil,
+        accountsCountryLatLong: String? = nil,
+        accountsNoreplyEmail: String? = nil,
+        accountsShowCalories: String? = nil,
+        accountsShowProductType: String? = nil,
+        accountsShowTestimonials: String? = nil,
+        accountsShowQuestions: String? = nil,
+        accountsShowPartners: String? = nil,
+        accountsShowNews: String? = nil,
+        accountsShowJobs: String? = nil,
+        accountsShowArticles: String? = nil,
+        accountsShowAlbums: String? = nil,
+        accountsShowWallet: String? = nil,
+        accountsShowLostSales: String? = nil,
+        accountsShowPointsLevels: String? = nil,
+        accountsShowChoices: String? = nil,
+        accountsShowProductsNotifications: String? = nil,
+        accountsShowProductsRatings: String? = nil,
+        accountsShowProductsFiles: String? = nil,
+        accountsShowProductDeliveryPeriod: String? = nil,
+        accountsShowOffersMagazines: String? = nil,
+        accountsShowBrands: String? = nil,
+        accountsShowBrandPage: String? = nil,
+        accountsShowOffers: String? = nil,
+        accountsShowImportLogs: String? = nil,
+        accountsShowStocks: String? = nil,
+        accountsShowOrderShippings: String? = nil,
+        accountsShowOrderReturnRequests: String? = nil,
+        accountsShowPromotionalMessages: String? = nil,
+        accountsShowPoints: String? = nil,
+        accountsShowSimilarItems: String? = nil,
+        accountsShowProductAssociations: String? = nil,
+        accountsShowAttributes: String? = nil,
+        accountsShowUploads: String? = nil,
+        accountsShowDailyOffers: String? = nil,
+        accountsShowHomeSettings: String? = nil,
+        accountsShowAdvertisementsSettings: String? = nil,
+        accountsMultiPriceForProduct: String? = nil,
+        accountsMultiPayments: String? = nil,
+        accountsOrdersScheduling: String? = nil,
+        accountsOrdersPickup: String? = nil,
+        accountsShowCashback: String? = nil,
+        accountsShowOurClients: String? = nil,
+        accountsOffersType: String? = nil,
+        accountsShowBi: String? = nil,
+        accountsFcmKey: String? = nil,
+        accountsFcmApiKey: String? = nil,
+        accountsFcmAuthDomain: String? = nil,
+        accountsFcmDatabaseURL: String? = nil,
+        accountsFcmProjectId: String? = nil,
+        accountsFcmStorageBucket: String? = nil,
+        accountsFcmMessagingSenderId: String? = nil,
+        accountsFcmAppId: String? = nil,
+        accountsFcmMeasurementId: String? = nil,
+        accountsAndroidUrl: String? = nil,
+        accountsIosUrl: String? = nil,
+        accountsProductUrl: String? = nil,
+        accountsGoogleMapKey: String? = nil,
+        accountsWebsiteUrl: String? = nil,
+        accountsNumberDecimalDigits: Int? = nil,
+        accountsStatus: String? = nil,
+        accountsPosition: Int? = nil,
+        accountsWebServiceToken: String? = nil,
+        accountsSocialLoginBtns: String? = nil,
+        accountsShowRemoveAccount: String? = nil,
+        accountsAppTheme: String? = nil,
+        accountsAuthType: String? = nil,
+        accountsCreatedAt: String? = nil,
+        accountsUpdatedAt: String? = nil,
+        accountsShowReels: String? = nil,
+        productsTitle: String? = nil,
+        mobileAppColors: MobileAppColors? = nil
+    ) {
+        self.accountsId = accountsId
+        self.accountsName = accountsName
+        self.accountsSlug = accountsSlug
+        self.accountsImgDashboard = accountsImgDashboard
+        self.accountsImgRtl = accountsImgRtl
+        self.accountsImgLtr = accountsImgLtr
+        self.accountsImgFavicon = accountsImgFavicon
+        self.accountsImgHeaderReverse = accountsImgHeaderReverse
+        self.accountsShowBranches = accountsShowBranches
+        self.accountsShowHierarchy = accountsShowHierarchy
+        self.accountsShowAreas = accountsShowAreas
+        self.accountsShowCoupons = accountsShowCoupons
+        self.accountsShowShippingMethods = accountsShowShippingMethods
+        self.accountsShowOrdersRatings = accountsShowOrdersRatings
+        self.accountsSingleMenu = accountsSingleMenu
+        self.accountsCountry = accountsCountry
+        self.accountsCountryCode = accountsCountryCode
+        self.accountsMultipleCountries = accountsMultipleCountries
+        self.accountsCountryMobileDigitsCount = accountsCountryMobileDigitsCount
+        self.accountsTimezone = accountsTimezone
+        self.accountsCountryLatLong = accountsCountryLatLong
+        self.accountsNoreplyEmail = accountsNoreplyEmail
+        self.accountsShowCalories = accountsShowCalories
+        self.accountsShowProductType = accountsShowProductType
+        self.accountsShowTestimonials = accountsShowTestimonials
+        self.accountsShowQuestions = accountsShowQuestions
+        self.accountsShowPartners = accountsShowPartners
+        self.accountsShowNews = accountsShowNews
+        self.accountsShowJobs = accountsShowJobs
+        self.accountsShowArticles = accountsShowArticles
+        self.accountsShowAlbums = accountsShowAlbums
+        self.accountsShowWallet = accountsShowWallet
+        self.accountsShowLostSales = accountsShowLostSales
+        self.accountsShowPointsLevels = accountsShowPointsLevels
+        self.accountsShowChoices = accountsShowChoices
+        self.accountsShowProductsNotifications = accountsShowProductsNotifications
+        self.accountsShowProductsRatings = accountsShowProductsRatings
+        self.accountsShowProductsFiles = accountsShowProductsFiles
+        self.accountsShowProductDeliveryPeriod = accountsShowProductDeliveryPeriod
+        self.accountsShowOffersMagazines = accountsShowOffersMagazines
+        self.accountsShowBrands = accountsShowBrands
+        self.accountsShowBrandPage = accountsShowBrandPage
+        self.accountsShowOffers = accountsShowOffers
+        self.accountsShowImportLogs = accountsShowImportLogs
+        self.accountsShowStocks = accountsShowStocks
+        self.accountsShowOrderShippings = accountsShowOrderShippings
+        self.accountsShowOrderReturnRequests = accountsShowOrderReturnRequests
+        self.accountsShowPromotionalMessages = accountsShowPromotionalMessages
+        self.accountsShowPoints = accountsShowPoints
+        self.accountsShowSimilarItems = accountsShowSimilarItems
+        self.accountsShowProductAssociations = accountsShowProductAssociations
+        self.accountsShowAttributes = accountsShowAttributes
+        self.accountsShowUploads = accountsShowUploads
+        self.accountsShowDailyOffers = accountsShowDailyOffers
+        self.accountsShowHomeSettings = accountsShowHomeSettings
+        self.accountsShowAdvertisementsSettings = accountsShowAdvertisementsSettings
+        self.accountsMultiPriceForProduct = accountsMultiPriceForProduct
+        self.accountsMultiPayments = accountsMultiPayments
+        self.accountsOrdersScheduling = accountsOrdersScheduling
+        self.accountsOrdersPickup = accountsOrdersPickup
+        self.accountsShowCashback = accountsShowCashback
+        self.accountsShowOurClients = accountsShowOurClients
+        self.accountsOffersType = accountsOffersType
+        self.accountsShowBi = accountsShowBi
+        self.accountsFcmKey = accountsFcmKey
+        self.accountsFcmApiKey = accountsFcmApiKey
+        self.accountsFcmAuthDomain = accountsFcmAuthDomain
+        self.accountsFcmDatabaseURL = accountsFcmDatabaseURL
+        self.accountsFcmProjectId = accountsFcmProjectId
+        self.accountsFcmStorageBucket = accountsFcmStorageBucket
+        self.accountsFcmMessagingSenderId = accountsFcmMessagingSenderId
+        self.accountsFcmAppId = accountsFcmAppId
+        self.accountsFcmMeasurementId = accountsFcmMeasurementId
+        self.accountsAndroidUrl = accountsAndroidUrl
+        self.accountsIosUrl = accountsIosUrl
+        self.accountsProductUrl = accountsProductUrl
+        self.accountsGoogleMapKey = accountsGoogleMapKey
+        self.accountsWebsiteUrl = accountsWebsiteUrl
+        self.accountsNumberDecimalDigits = accountsNumberDecimalDigits
+        self.accountsStatus = accountsStatus
+        self.accountsPosition = accountsPosition
+        self.accountsWebServiceToken = accountsWebServiceToken
+        self.accountsSocialLoginBtns = accountsSocialLoginBtns
+        self.accountsShowRemoveAccount = accountsShowRemoveAccount
+        self.accountsAppTheme = accountsAppTheme
+        self.accountsAuthType = accountsAuthType
+        self.accountsCreatedAt = accountsCreatedAt
+        self.accountsUpdatedAt = accountsUpdatedAt
+        self.accountsShowReels = accountsShowReels
+        self.productsTitle = productsTitle
+        self.mobileAppColors = mobileAppColors
+    }
 
     enum CodingKeys: String, CodingKey {
         case accountsId = "accounts_id"

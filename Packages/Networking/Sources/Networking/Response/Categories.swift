@@ -9,7 +9,7 @@ import Foundation
 
 
 
-struct Categories: Codable, Sendable {
+public struct Categories: Codable, Sendable {
     let categoriesId: Int?
     let categoriesCode: String?
     let categoriesParentId: Int?

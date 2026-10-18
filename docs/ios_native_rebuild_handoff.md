@@ -229,6 +229,11 @@ What exists and is verified:
   - `SessionRepository` protocol (`state`, `token`, `signIn(token:)`, `signOut()`).
   - `AppSessionRepository` (`@Observable`, `@unchecked Sendable`, backed by `KeychainStorage` protocol) with in-memory token lookup and cold start hydration from Keychain.
   - `SessionRepositoryTests.swift` with 4 test scenarios passing cleanly.
+- **Phase 2 (Unit 2.4 - Bootstrap Foundation):**
+  - Pure domain entities in `Packages/Core`: `StoreStatus`, `CurrencyConfig`, `ThemeConfig`, and `BootstrapData` (Option A Clean Architecture separation).
+  - State model in `Packages/Data`: `BootstrapState` enum (`.idle`, `.loading`, `.loaded(BootstrapData)`, `.failed(NetworkError)`).
+  - Contract in `Packages/Data`: `BootstrapRepository` protocol (`state`, `load() async throws`).
+  - `Networking` response DTOs updated with `public` access modifiers and test memberwise initializers.
 
 Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 0: I wrote config, schemes, container, app entry, single-assert test. Given on request: final `AppConfiguration`, test cases, nonisolated cleanup.
@@ -236,9 +241,10 @@ Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 2 (Unit 2.1): I wrote `PreferenceStorage`, `AppPreferenceStorage`, `KeychainError`, `SystemKeychainStorage`, and string helpers. Given on request: `TestPreferenceStorage`, `TestKeychainStorage`, and test suites.
 - Phase 2 (Unit 2.2): I wrote `AppContainer` storage wiring, first-run wipe, and closure suppliers. Given on request: `AppContainerTests.swift`.
 - Phase 2 (Unit 2.3): I wrote `SessionState`, `SessionRepository`, and `AppSessionRepository`. Given on request: `SessionRepositoryTests.swift` and `@unchecked Sendable` conformance.
+- Phase 2 (Unit 2.4 in progress): I wrote `StoreStatus`, `CurrencyConfig`, `ThemeConfig`, `BootstrapData`, `BootstrapState`, and `BootstrapRepository` protocol. Given on request: `Networking` DTO public accessors and test initializers.
 
 My next actions (Unit 2.4 & 2.5):
-1. Unit 2.4: Bootstrap Repository (calls `/initial` via `NetworkClient.send(.initial)` and saves bootstrap state/theme).
+1. Unit 2.4: Implement `AppBootstrapRepository` (maps raw `InitialData` -> `BootstrapData`) and write unit tests in `BootstrapRepositoryTests.swift` using `TestTransport`.
 2. Unit 2.5: Splash screen / routing based on bootstrap state.
 
 ---
@@ -256,4 +262,5 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-16 — Phase 1 complete (`NetworkClientTests` passing). Created `Packages/Data` local package, linked to Xcode project.
 - 2026-10-17 — Unit 2.1 complete: Implemented `AppPreferenceStorage` (UserDefaults) and `SystemKeychainStorage` (Security framework). Added in-memory fakes and Swift Testing suites (`AppPreferenceStorageTests`, `KeychainStorageTests`). Verified clean build.
 - 2026-10-18 — Unit 2.2 complete: Wired `PreferenceStorage` and `KeychainStorage` into `AppContainer` with first-run wipe and live supplier closures. Added `AppContainerTests` suite.
-- 2026-10-18 — Unit 2.3 complete: Implemented `SessionState`, `SessionRepository`, and `AppSessionRepository` with Keychain sync and cold-start restore. Added `SessionRepositoryTests` suite (all 4 tests passing). Ready for Unit 2.4 (Bootstrap Repository).
+- 2026-10-18 — Unit 2.3 complete: Implemented `SessionState`, `SessionRepository`, and `AppSessionRepository` with Keychain sync and cold-start restore. Added `SessionRepositoryTests` suite (all 4 tests passing).
+- 2026-10-18 — Unit 2.4 started: Decided on Option A (Domain Entity separation). Implemented `StoreStatus`, `CurrencyConfig`, `ThemeConfig`, `BootstrapData`, `BootstrapState`, and `BootstrapRepository` protocol. Ready for `AppBootstrapRepository` implementation and unit tests tomorrow.
