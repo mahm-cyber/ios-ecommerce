@@ -207,7 +207,7 @@ Concepts to learn for this phase: target vs build configuration vs scheme; xccon
 
 ## 7. Current status
 
-**Phase 0 and Phase 1 are complete. Phase 2 (Session, `/initial` bootstrap & splash) is in progress: Unit 2.1 (Local Storage in `Packages/Data`) is complete and verified.**
+**Phase 0 and Phase 1 are complete. Phase 2 (Session, `/initial` bootstrap & splash) is in progress: Unit 2.1 (Local Storage) and Unit 2.2 (Composition Root Wiring) are complete and verified.**
 
 Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`.
 
@@ -219,16 +219,22 @@ What exists and is verified:
   - `KeychainStorage` protocol, `SystemKeychainStorage` (`@unchecked Sendable`, backed by native `Security` framework with `SecItemAdd`, `SecItemCopyMatching`, `SecItemDelete`, `wipeAll`, `service` namespace), and `KeychainStorage` string extension helpers.
   - Test fakes: `TestPreferenceStorage` and `TestKeychainStorage`.
   - Swift Testing test suites: `AppPreferenceStorageTests` and `KeychainStorageTests`.
+- **Phase 2 (Unit 2.2 - Composition Root Wiring):**
+  - `AppContainer` wired with `PreferenceStorage` and `KeychainStorage` with default parameter injection for testability.
+  - First-launch Keychain wipe logic executed on cold start (`isFirstRun == true` -> `keychainStorage.wipeAll()`, `isFirstRun = false`).
+  - Session supplier closures wired to `NetworkClient` for live `selectedLanguage`, `deviceID`, and `auth_token`.
+  - `AppContainerTests.swift` testing first-run wipe, subsequent run token preservation, and supplier wiring.
 
 Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 0: I wrote config, schemes, container, app entry, single-assert test. Given on request: final `AppConfiguration`, test cases, nonisolated cleanup.
 - Phase 1: I wrote `RequestBuilder`, `Endpoint`, `/initial` DTOs, `APIResponse`, `NetworkClient`, and the test suites (`HTTPMethodTests`, `RequestBuilderTests`, `NetworkClientTests`).
-- Phase 2 (Unit 2.1): I wrote `PreferenceStorage`, `AppPreferenceStorage` (computed properties & `UserDefaults`), `KeychainError`, `SystemKeychainStorage` (Security framework queries, pointer matching, status code handling), and `KeychainStorage` string helpers. Given on request: `TestPreferenceStorage`, `TestKeychainStorage`, and test suites.
+- Phase 2 (Unit 2.1): I wrote `PreferenceStorage`, `AppPreferenceStorage`, `KeychainError`, `SystemKeychainStorage`, and string helpers. Given on request: `TestPreferenceStorage`, `TestKeychainStorage`, and test suites.
+- Phase 2 (Unit 2.2): I wrote `AppContainer` storage wiring, first-run wipe, and closure suppliers. Given on request: `AppContainerTests.swift`.
 
-My next actions (Unit 2.2):
-1. Wire `PreferenceStorage` and `KeychainStorage` into `AppContainer.swift`.
-2. Implement first-launch Keychain wipe logic in the composition root / bootstrap (`isFirstRun == true` -> `keychainStorage.wipeAll()`, then set `isFirstRun = false`).
-3. Connect `NetworkClient` session supplier closures to read current `selectedLanguage`, `deviceID`, and `authToken` from `PreferenceStorage` and `KeychainStorage`.
+My next actions (Unit 2.3 & 2.4):
+1. Unit 2.3: Session Repository (holds in-memory user/customer state, token sync with Keychain, and session expiration notification).
+2. Unit 2.4: Bootstrap Repository (calls `/initial` via `NetworkClient.send(.initial)` and saves bootstrap state/theme).
+3. Unit 2.5: Splash screen / routing based on bootstrap state.
 
 ---
 
@@ -244,5 +250,6 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-15 — Completed Unit 1.1: `RequestBuilder`, `InitialData` DTOs, and full `RequestBuilderTests` suite passing. Implemented Unit 1.2: `HTTPTransport`, `TestTransport`, and `NetworkClient`. Inverted HTTP 401 guard fixed. Ready for `NetworkClientTests`.
 - 2026-10-16 — Phase 1 complete (`NetworkClientTests` passing). Created `Packages/Data` local package, linked to Xcode project.
 - 2026-10-17 — Unit 2.1 complete: Implemented `AppPreferenceStorage` (UserDefaults) and `SystemKeychainStorage` (Security framework). Added in-memory fakes and Swift Testing suites (`AppPreferenceStorageTests`, `KeychainStorageTests`). Verified clean build.
+- 2026-10-18 — Unit 2.2 complete: Wired `PreferenceStorage` and `KeychainStorage` into `AppContainer` with first-run wipe and live supplier closures. Added `AppContainerTests` suite. Ready for Unit 2.3 (Session Repository).
 
 

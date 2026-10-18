@@ -7,12 +7,26 @@
 
 import Foundation
 import Networking
+import Data
 
 final class AppContainer {
     let appConfiguration: AppConfiguration
     let networkClient: NetworkClient
+    public var preferenceStorage: PreferenceStorage
+    public let keychainStorage: KeychainStorage
 
-    init(appConfiguration: AppConfiguration) {
+    init(
+        appConfiguration: AppConfiguration,
+        preferenceStorage: PreferenceStorage = AppPreferenceStorage(),
+        keychainStorage: KeychainStorage = SystemKeychainStorage()
+    ) {
+        self.preferenceStorage = preferenceStorage
+        self.keychainStorage = keychainStorage
+        if preferenceStorage.isFirstRun {
+            try? keychainStorage.wipeAll()
+            self.preferenceStorage.isFirstRun = false
+        }
+        
         self.appConfiguration = appConfiguration
 
         let requestBuilder = RequestBuilder(
@@ -24,6 +38,18 @@ final class AppContainer {
             )
         )
 
-        self.networkClient = NetworkClient(builder: requestBuilder)
+        self.networkClient = NetworkClient(
+            builder: requestBuilder,
+            languageSupplier: {
+                preferenceStorage.selectedLanguage
+            },
+            tokenSupplier: {
+                try? keychainStorage.readString(key: "auth_token")
+            },
+            deviceIDSupplier: {
+                preferenceStorage.deviceID
+            },
+            
+        )
     }
 }
