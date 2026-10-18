@@ -205,9 +205,9 @@ Concepts to learn for this phase: target vs build configuration vs scheme; xccon
 
 ---
 
-## 7. Current status
+### 7. Current status
 
-**Phase 0 and Phase 1 are complete. Phase 2 (Session, `/initial` bootstrap & splash) is in progress: Unit 2.1 (Local Storage) and Unit 2.2 (Composition Root Wiring) are complete and verified.**
+**Phase 0 and Phase 1 are complete. Phase 2 (Session, `/initial` bootstrap & splash) is in progress: Unit 2.1 (Local Storage), Unit 2.2 (Composition Root Wiring), and Unit 2.3 (Session Repository) are complete and verified.**
 
 Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`.
 
@@ -224,17 +224,22 @@ What exists and is verified:
   - First-launch Keychain wipe logic executed on cold start (`isFirstRun == true` -> `keychainStorage.wipeAll()`, `isFirstRun = false`).
   - Session supplier closures wired to `NetworkClient` for live `selectedLanguage`, `deviceID`, and `auth_token`.
   - `AppContainerTests.swift` testing first-run wipe, subsequent run token preservation, and supplier wiring.
+- **Phase 2 (Unit 2.3 - Session Repository in `Packages/Data`):**
+  - `SessionState` enum (`.unauthenticated`, `.authenticated(token: String)`).
+  - `SessionRepository` protocol (`state`, `token`, `signIn(token:)`, `signOut()`).
+  - `AppSessionRepository` (`@Observable`, `@unchecked Sendable`, backed by `KeychainStorage` protocol) with in-memory token lookup and cold start hydration from Keychain.
+  - `SessionRepositoryTests.swift` with 4 test scenarios passing cleanly.
 
 Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 0: I wrote config, schemes, container, app entry, single-assert test. Given on request: final `AppConfiguration`, test cases, nonisolated cleanup.
 - Phase 1: I wrote `RequestBuilder`, `Endpoint`, `/initial` DTOs, `APIResponse`, `NetworkClient`, and the test suites (`HTTPMethodTests`, `RequestBuilderTests`, `NetworkClientTests`).
 - Phase 2 (Unit 2.1): I wrote `PreferenceStorage`, `AppPreferenceStorage`, `KeychainError`, `SystemKeychainStorage`, and string helpers. Given on request: `TestPreferenceStorage`, `TestKeychainStorage`, and test suites.
 - Phase 2 (Unit 2.2): I wrote `AppContainer` storage wiring, first-run wipe, and closure suppliers. Given on request: `AppContainerTests.swift`.
+- Phase 2 (Unit 2.3): I wrote `SessionState`, `SessionRepository`, and `AppSessionRepository`. Given on request: `SessionRepositoryTests.swift` and `@unchecked Sendable` conformance.
 
-My next actions (Unit 2.3 & 2.4):
-1. Unit 2.3: Session Repository (holds in-memory user/customer state, token sync with Keychain, and session expiration notification).
-2. Unit 2.4: Bootstrap Repository (calls `/initial` via `NetworkClient.send(.initial)` and saves bootstrap state/theme).
-3. Unit 2.5: Splash screen / routing based on bootstrap state.
+My next actions (Unit 2.4 & 2.5):
+1. Unit 2.4: Bootstrap Repository (calls `/initial` via `NetworkClient.send(.initial)` and saves bootstrap state/theme).
+2. Unit 2.5: Splash screen / routing based on bootstrap state.
 
 ---
 
@@ -250,6 +255,5 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-15 — Completed Unit 1.1: `RequestBuilder`, `InitialData` DTOs, and full `RequestBuilderTests` suite passing. Implemented Unit 1.2: `HTTPTransport`, `TestTransport`, and `NetworkClient`. Inverted HTTP 401 guard fixed. Ready for `NetworkClientTests`.
 - 2026-10-16 — Phase 1 complete (`NetworkClientTests` passing). Created `Packages/Data` local package, linked to Xcode project.
 - 2026-10-17 — Unit 2.1 complete: Implemented `AppPreferenceStorage` (UserDefaults) and `SystemKeychainStorage` (Security framework). Added in-memory fakes and Swift Testing suites (`AppPreferenceStorageTests`, `KeychainStorageTests`). Verified clean build.
-- 2026-10-18 — Unit 2.2 complete: Wired `PreferenceStorage` and `KeychainStorage` into `AppContainer` with first-run wipe and live supplier closures. Added `AppContainerTests` suite. Ready for Unit 2.3 (Session Repository).
-
-
+- 2026-10-18 — Unit 2.2 complete: Wired `PreferenceStorage` and `KeychainStorage` into `AppContainer` with first-run wipe and live supplier closures. Added `AppContainerTests` suite.
+- 2026-10-18 — Unit 2.3 complete: Implemented `SessionState`, `SessionRepository`, and `AppSessionRepository` with Keychain sync and cold-start restore. Added `SessionRepositoryTests` suite (all 4 tests passing). Ready for Unit 2.4 (Bootstrap Repository).
