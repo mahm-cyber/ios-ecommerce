@@ -16,4 +16,5 @@ public enum NetworkError: Error, Sendable, Equatable {
     case noData
     case noInternet
     case timeout
+    case unknown
 }

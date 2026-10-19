@@ -12,6 +12,8 @@ public enum StoreStatus: Sendable, Equatable {
     case active
     case maintenance(message: String?)
     case ordersDisabled(message: String?)
+    
+ 
 }
 
 public struct CurrencyConfig: Sendable, Equatable {
