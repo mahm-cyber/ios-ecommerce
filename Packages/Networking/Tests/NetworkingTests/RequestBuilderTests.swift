@@ -14,7 +14,8 @@ struct RequestBuilderTests {
     private func makeBuilder(
         baseURLString: String = "https://example.com",
         accountId: String = "27",
-        secretKey: String = "test_secret"
+        secretKey: String = "test_secret",
+        userAgent: String? = "PolarisMax-iOS"
     ) -> RequestBuilder {
         let config = APIConfiguration(
             baseURL: URL(string: baseURLString)!,
@@ -22,7 +23,7 @@ struct RequestBuilderTests {
             accountId: accountId,
             secretKey: secretKey
         )
-        return RequestBuilder(config)
+        return RequestBuilder(config, userAgent: userAgent)
     }
 
     // MARK: - URL Construction & Language
@@ -65,6 +66,31 @@ struct RequestBuilderTests {
         #expect(request.value(forHTTPHeaderField: "Secretkey") == "my_secret_key")
         #expect(request.value(forHTTPHeaderField: "User-Agent") == "PolarisMax-iOS")
         #expect(request.value(forHTTPHeaderField: "X-Requested-With") == "XMLHttpRequest")
+    }
+
+    @Test
+    func customUserAgentIsApplied() throws {
+        let builder = makeBuilder(userAgent: "Custom-UA-123")
+        let request = try builder.buildURLRequest(for: .initial, language: "en")
+        #expect(request.value(forHTTPHeaderField: "User-Agent") == "Custom-UA-123")
+    }
+
+    @Test
+    func defaultUserAgentIsAppliedWhenNil() throws {
+        let config = APIConfiguration(
+            baseURL: URL(string: "https://example.com")!,
+            apiVersion: "v006",
+            accountId: "27",
+            secretKey: "test_secret"
+        )
+        let builder = RequestBuilder(config)
+        let request = try builder.buildURLRequest(for: .initial, language: "en")
+        #if canImport(UIKit)
+        #expect(request.value(forHTTPHeaderField: "User-Agent")?.contains("FlutterApp/") == true)
+        #expect(request.value(forHTTPHeaderField: "User-Agent")?.contains("DeviceId/") == true)
+        #else
+        #expect(request.value(forHTTPHeaderField: "User-Agent") == "PolarisMax-iOS")
+        #endif
     }
 
     // MARK: - Conditional Headers
@@ -129,7 +155,7 @@ struct RequestBuilderTests {
         let request = try builder.buildURLRequest(for: .initial, language: "en")
 
         let queryString = request.url?.query() ?? ""
-        #expect(queryString.contains("account_id=42"))
+        #expect(queryString.contains("accountId=42"))
     }
 
     @Test
@@ -144,7 +170,7 @@ struct RequestBuilderTests {
 
         let queryString = request.url?.query() ?? ""
         #expect(queryString.contains("page=3"))
-        #expect(queryString.contains("account_id=42"))
+        #expect(queryString.contains("accountId=42"))
     }
 
     @Test
@@ -157,7 +183,7 @@ struct RequestBuilderTests {
         let request = try builder.buildURLRequest(for: postEndpoint, language: "en")
 
         let queryString = request.url?.query() ?? ""
-        #expect(queryString.contains("account_id") == false)
+        #expect(queryString.contains("accountId") == false)
     }
 
     // MARK: - Timeout

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 import Networking
 import Data
 
@@ -14,11 +15,15 @@ final class AppContainer {
     let networkClient: NetworkClient
     public var preferenceStorage: PreferenceStorage
     public let keychainStorage: KeychainStorage
+    public let sessionRepository: SessionRepository
+    public let bootstrapRepository: BootstrapRepository
 
     init(
         appConfiguration: AppConfiguration,
         preferenceStorage: PreferenceStorage = AppPreferenceStorage(),
-        keychainStorage: KeychainStorage = SystemKeychainStorage()
+        keychainStorage: KeychainStorage = SystemKeychainStorage(),
+        sessionRepository: SessionRepository? = nil,
+        bootstrapRepository: BootstrapRepository? = nil
     ) {
         self.preferenceStorage = preferenceStorage
         self.keychainStorage = keychainStorage
@@ -29,27 +34,39 @@ final class AppContainer {
         
         self.appConfiguration = appConfiguration
 
+        let resolvedSession = sessionRepository ?? AppSessionRepository(keychainStorage: self.keychainStorage)
+        self.sessionRepository = resolvedSession
+
+        let userAgent = UserAgent.current(
+            deviceId: UIDevice.current.identifierForVendor?.uuidString ?? preferenceStorage.deviceID
+        )
+
         let requestBuilder = RequestBuilder(
             APIConfiguration(
                 baseURL: appConfiguration.baseURL,
                 apiVersion: appConfiguration.apiVersion,
                 accountId: appConfiguration.accountID,
                 secretKey: appConfiguration.secretKey
-            )
+            ),
+            userAgent: userAgent
         )
 
-        self.networkClient = NetworkClient(
+        let client = NetworkClient(
             builder: requestBuilder,
             languageSupplier: {
                 preferenceStorage.selectedLanguage
             },
             tokenSupplier: {
-                try? keychainStorage.readString(key: "auth_token")
+                resolvedSession.token
             },
             deviceIDSupplier: {
                 preferenceStorage.deviceID
-            },
-            
+            }
+        )
+        self.networkClient = client
+
+        self.bootstrapRepository = bootstrapRepository ?? AppBootstrapRepository(
+            networkClient: client
         )
     }
 }

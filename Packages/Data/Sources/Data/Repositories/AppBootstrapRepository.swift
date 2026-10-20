@@ -35,11 +35,14 @@ public final class AppBootstrapRepository: BootstrapRepository, @unchecked Senda
             let initialData =  try  await networkClient.send(.initial)
             let bootstrapData = map(initialData)
             state = .loaded(bootstrapData)
-        } catch let error  as NetworkError  {
+        } catch let error as NetworkError {
             state = .failed(error)
             throw error
-        }  catch {
-            state = .failed(.unknown)
+        } catch {
+            #if DEBUG
+            print("❌ [Bootstrap Error] \(error)")
+            #endif
+            state = .failed(.serverError(statusCode: -1, message: error.localizedDescription))
             throw error
         }
     }

@@ -45,8 +45,14 @@ public struct NetworkClient: Sendable{
         
         let (data, response): (Data, URLResponse)
         do {
-             (data, response) =  try await transport.send(request)
+             (data, response) = try await transport.send(request)
         } catch let urlError as URLError {
+            #if DEBUG
+            print("""
+            ❌ [Network Error] \(request.httpMethod ?? "GET") \(request.url?.absoluteString ?? "")
+            ⚠️ URLError: \(urlError.localizedDescription) (code: \(urlError.code.rawValue))
+            """)
+            #endif
             switch urlError.code {
             case .notConnectedToInternet, .networkConnectionLost:
                 throw NetworkError.noInternet
@@ -56,6 +62,26 @@ public struct NetworkClient: Sendable{
                 throw urlError
             }
         }
+
+        #if DEBUG
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+        let bodyString: String
+        if let jsonObject = try? JSONSerialization.jsonObject(with: data),
+           let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted, .sortedKeys]),
+           let prettyString = String(data: prettyData, encoding: .utf8) {
+            bodyString = prettyString
+        } else {
+            bodyString = String(data: data, encoding: .utf8) ?? "<non-utf8: \(data.count) bytes>"
+        }
+        print("""
+        ==================== [Network] ====================
+        🌐 \(request.httpMethod ?? "GET") \(request.url?.absoluteString ?? "")
+        📥 HTTP Status: \(statusCode)
+        📦 Response:
+        \(bodyString)
+        ===================================================
+        """)
+        #endif
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
@@ -72,28 +98,45 @@ public struct NetworkClient: Sendable{
             )
         }
 
-        let envelope = try decoder.decode(
-            APIResponse<Response>.self,
-            from: data
-        )
+        let envelope: APIResponse<Response>
+        do {
+            envelope = try decoder.decode(
+                APIResponse<Response>.self,
+                from: data
+            )
+        } catch {
+            #if DEBUG
+            print("""
+            ==================== [Decoding Error] ====================
+            ❌ Failed to decode \(Response.self):
+            Error: \(error)
+            ==========================================================
+            """)
+            #endif
+            throw NetworkError.serverError(
+                statusCode: httpResponse.statusCode,
+                message: "Decoding failed: \(error.localizedDescription)"
+            )
+        }
+
+        let envelopeStatus = envelope.status ?? httpResponse.statusCode
 
         if let serverErrors = envelope.errors, !serverErrors.error.isEmpty {
             throw NetworkError.serverError(
-                statusCode: envelope.status,
+                statusCode: envelopeStatus,
                 message: serverErrors.error
             )
         }
 
-        if envelope.status == 401 {
+        if envelopeStatus == 401 {
             throw NetworkError.sessionExpired
         }
         
-        if envelope.status != 200 {
-            throw NetworkError
-                .serverError(
-                    statusCode: envelope.status,
-                    message: envelope.message
-                )
+        if envelopeStatus != 200 {
+            throw NetworkError.serverError(
+                statusCode: envelopeStatus,
+                message: envelope.message
+            )
         }
         
      

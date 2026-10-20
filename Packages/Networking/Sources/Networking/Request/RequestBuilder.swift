@@ -10,19 +10,25 @@ import Core
 
 public struct RequestBuilder: Sendable {
     let apiConfig: APIConfiguration
+    let userAgent: String
     
     private let contentHeaderKey = "Content-Type"
     private let acceptValue = "application/json"
     private let acceptHeaderKey = "Accept"
     private let secretHeaderKey = "Secretkey"
-    private let userAgentValue = "PolarisMax-iOS"
     private let userAgentHeaderKey = "User-Agent"
     private let xRequestedWithValue = "XMLHttpRequest"
     private let xRequestedWithHeaderKey = "X-Requested-With"
     private let authrizationHeaderKey = "Authorization"
     private let deviceIdHeaderKey = "device_token"
-    public init(_ apiConfiguration: APIConfiguration) {
-        apiConfig = apiConfiguration
+    
+    public init(_ apiConfiguration: APIConfiguration, userAgent: String? = nil) {
+        self.apiConfig = apiConfiguration
+        #if canImport(UIKit)
+        self.userAgent = userAgent ?? UserAgent.current()
+        #else
+        self.userAgent = userAgent ?? "PolarisMax-iOS"
+        #endif
     }
 
 
@@ -43,7 +49,7 @@ public struct RequestBuilder: Sendable {
         if  endpoint.method == .get  {
             queries
                 .append(
-                    URLQueryItem(name: "account_id", value: apiConfig.accountId)
+                    URLQueryItem(name: "accountId", value: apiConfig.accountId)
                 )
         }
         
@@ -61,7 +67,7 @@ public struct RequestBuilder: Sendable {
         request.timeoutInterval = 30.0
         request.setValue(acceptValue, forHTTPHeaderField: acceptHeaderKey)
         request.setValue(apiConfig.secretKey, forHTTPHeaderField: secretHeaderKey)
-        request.setValue(userAgentValue, forHTTPHeaderField: userAgentHeaderKey)
+        request.setValue(userAgent, forHTTPHeaderField: userAgentHeaderKey)
         request.setValue(xRequestedWithValue, forHTTPHeaderField:  xRequestedWithHeaderKey)
         
         if let body = endpoint.body,  !body.isEmpty {

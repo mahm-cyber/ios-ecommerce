@@ -24,7 +24,7 @@ struct IOS_ECommerceApp: App {
    
     var body: some Scene {
         WindowGroup {
-            ContentView(configuration: container.appConfiguration)
+            AppRootView(container: container)
         }
         
     }

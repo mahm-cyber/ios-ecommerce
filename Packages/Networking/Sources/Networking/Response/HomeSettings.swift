@@ -7,19 +7,18 @@
 
 import Foundation
 
-public
-struct HomeSettings: Codable, Sendable{
-    let homeSettingsId: Int?
-    let fKAccountsId: Int?
-    let homeSettingsDevice: String?
-    let homeSettingsKey: String?
-    let homeSettingsStatus: String?
-    let homeSettingsPosition: Int?
-    let homeSettingsCreatedAt: String?
-    let homeSettingsUpdatedAt: String?
-    let homeSettingsTitle: String?
-    let homeSettingsSubTitle: String?
-    let staticPage: String?
+public struct HomeSettings: Codable, Sendable {
+    public let homeSettingsId: Int?
+    public let fKAccountsId: Int?
+    public let homeSettingsDevice: String?
+    public let homeSettingsKey: String?
+    public let homeSettingsStatus: String?
+    public let homeSettingsPosition: Int?
+    public let homeSettingsCreatedAt: String?
+    public let homeSettingsUpdatedAt: String?
+    public let homeSettingsTitle: String?
+    public let homeSettingsSubTitle: String?
+    public let staticPage: StaticPage?
 
     enum CodingKeys: String, CodingKey {
         case homeSettingsId = "home_settings_id"

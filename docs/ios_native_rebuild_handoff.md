@@ -236,6 +236,12 @@ What exists and is verified:
   - `AppBootstrapRepository` (`@Observable`, `@unchecked Sendable`) with defensive DTO -> Domain mapping logic.
   - `BootstrapRepositoryTests.swift` with 6 test scenarios passing cleanly using `TestTransport`.
 
+- **Phase 2 (Unit 2.5 - Splash, Routing & Dynamic User-Agent):**
+  - `UserAgent` formatter (`Packages/Networking/Sources/Networking/Request/UserAgent.swift`) generating dynamic backend-compatible User-Agent strings using `UIDevice` & `Bundle`. Tested via `UserAgentTests.swift`.
+  - Conformed `NetworkError` to `LocalizedError` in `Packages/Core/Sources/Core/NetworkError.swift` for descriptive server error messages.
+  - `SplashView`, `MaintenanceView`, and `AppRootView` implementing bootstrap state routing (`.idle`/`.loading` -> `SplashView`, `.loaded` -> `ContentView` / `MaintenanceView`, `.failed` -> `ContentUnavailableView` with retry action).
+  - Single `AppContainer` lifecycle instantiation in `IOS_ECommerceApp.swift`.
+
 Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 0: I wrote config, schemes, container, app entry, single-assert test. Given on request: final `AppConfiguration`, test cases, nonisolated cleanup.
 - Phase 1: I wrote `RequestBuilder`, `Endpoint`, `/initial` DTOs, `APIResponse`, `NetworkClient`, and the test suites (`HTTPMethodTests`, `RequestBuilderTests`, `NetworkClientTests`).
@@ -243,9 +249,10 @@ Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 2 (Unit 2.2): I wrote `AppContainer` storage wiring, first-run wipe, and closure suppliers. Given on request: `AppContainerTests.swift`.
 - Phase 2 (Unit 2.3): I wrote `SessionState`, `SessionRepository`, and `AppSessionRepository`. Given on request: `SessionRepositoryTests.swift` and `@unchecked Sendable` conformance.
 - Phase 2 (Unit 2.4): I wrote `StoreStatus`, `CurrencyConfig`, `ThemeConfig`, `BootstrapData`, `BootstrapState`, `BootstrapRepository`, and `AppBootstrapRepository`. Given on request: `BootstrapRepositoryTests.swift`, `TestTransport.swift`, and `Networking` DTO public accessors.
+- Phase 2 (Unit 2.5): I wrote `SplashView`, `MaintenanceView`, and `AppRootView`. Given on request: `UserAgent.swift`, `UserAgentTests.swift`, `NetworkError: LocalizedError`, and retry integration.
 
-My next actions (Unit 2.5):
-1. Unit 2.5: Splash screen / routing based on bootstrap state.
+My next actions (Phase 3):
+1. Phase 3: Home & Catalog features.
 
 ---
 
@@ -264,4 +271,5 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-18 — Unit 2.2 complete: Wired `PreferenceStorage` and `KeychainStorage` into `AppContainer` with first-run wipe and live supplier closures. Added `AppContainerTests` suite.
 - 2026-10-18 — Unit 2.3 complete: Implemented `SessionState`, `SessionRepository`, and `AppSessionRepository` with Keychain sync and cold-start restore. Added `SessionRepositoryTests` suite (all 4 tests passing).
 - 2026-10-19 — Unit 2.4 complete: Implemented `AppBootstrapRepository` with defensive DTO -> Domain mapping logic. Created `BootstrapRepositoryTests` with 6 test scenarios passing (14 total tests in Data passing in 0.014s). Ready for Unit 2.5 (Splash routing).
+- 2026-10-20 — Implemented dynamic Flutter-compatible `UserAgent` formatter (`UserAgent.swift` & `UserAgentTests.swift`), integrated into `RequestBuilder` and `AppContainer`. Conformed `NetworkError` to `LocalizedError`. Built Unit 2.5 (`SplashView`, `MaintenanceView`, and `AppRootView` with retry action). All unit tests passing.
 

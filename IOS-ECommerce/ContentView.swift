@@ -12,10 +12,12 @@ struct ContentView: View {
     let configuration: AppConfiguration
     
     var body: some View {
-        VStack {
-           
-            Text("Our Environment is:- \(configuration.environment.rawValue)")
-            Text("Our host is \(configuration.baseURL.host() ?? "")")
+        VStack(spacing: 16) {
+            Text("Cuddluxe")
+                .font(.largeTitle)
+                .bold()
+            Text("Environment: \(configuration.environment.rawValue)")
+            Text("Host: \(configuration.baseURL.host() ?? "")")
         }
         .padding()
     }
