@@ -10,6 +10,7 @@ public struct AppTheme: Sendable, Equatable {
     public let border: Color
     public let error: Color
     public let success: Color
+    public let typography: AppTypography
 
     public init(
         primary: Color,
@@ -19,7 +20,8 @@ public struct AppTheme: Sendable, Equatable {
         textSecondary: Color = Color(hex: "#6B6B6B", fallback: .gray),
         border: Color = Color(hex: "#D2D2D2", fallback: Color(white: 0.82)),
         error: Color = Color(hex: "#DB0B0B", fallback: .red),
-        success: Color = Color(hex: "#118C4A", fallback: .green)
+        success: Color = Color(hex: "#118C4A", fallback: .green),
+        typography: AppTypography = .default
     ) {
         self.primary = primary
         self.background = background
@@ -29,6 +31,7 @@ public struct AppTheme: Sendable, Equatable {
         self.border = border
         self.error = error
         self.success = success
+        self.typography = typography
     }
 
     public init(themeConfig: ThemeConfig, fallbackTheme: AppTheme = .default) {

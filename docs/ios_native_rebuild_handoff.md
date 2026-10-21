@@ -207,7 +207,7 @@ Concepts to learn for this phase: target vs build configuration vs scheme; xccon
 
 ### 7. Current status
 
-**Phase 0, Phase 1, and Phase 2 are complete. Phase 3 (Minimum Design System) is in progress: Unit 3.1 (Design System Foundation, Hex Color Parser & Theme Tokens) is complete and verified.**
+**Phase 0, Phase 1, Phase 2, and Phase 3 (Minimum Design System) are complete and verified. Ready for Phase 4 (First vertical slice: FAQ, then Categories).**
 
 Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`.
 
@@ -238,11 +238,12 @@ Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 2 (Unit 2.4): I wrote `StoreStatus`, `CurrencyConfig`, `ThemeConfig`, `BootstrapData`, `BootstrapState`, `BootstrapRepository`, and `AppBootstrapRepository`. Given on request: `BootstrapRepositoryTests.swift`, `TestTransport.swift`, and `Networking` DTO public accessors.
 - Phase 2 (Unit 2.5): I wrote `SplashView`, `MaintenanceView`, and `AppRootView`. Given on request: `UserAgent.swift`, `UserAgentTests.swift`, `NetworkError: LocalizedError`, and retry integration.
 - Phase 3 (Unit 3.1): I set up `Packages/DesignSystem`, linked it in Xcode, drafted `AppTheme.swift` and `AppThemeEnvironment.swift`. Given on request: `ColorHexTests.swift`, `Color+Hex.swift`, `AppTheme` completion, `AppThemeTests.swift`, and `AppRootView` environment wiring.
+- Phase 3 (Unit 3.2): I drafted `AppTypography.swift`, added `typography` property to `AppTheme`, and created `AppTypographyTests.swift`. Given on request: `AppTypography.swift` completion and `AppTypographyTests.swift` test suite.
+- Phase 3 (Unit 3.3): I implemented `AppButton.swift` (primary, secondary, ghost, loading, disabled) and wrote `AppButtonTests.swift` covering configuration, action execution, and variants. Given on request: `@MainActor` testing isolation guidance and `@MainActor @Sendable` action typing.
+- Phase 3 (Unit 3.4): I implemented `CurrencyEnvironment.swift`, `PriceView.swift` with currency formatting, dynamic vector SAR icon support with `Bundle.module`, and strike-through discounts. Given on request: `PriceViewTests.swift` and SPM resource bundle configuration.
 
-My next actions (Phase 3):
-1. Unit 3.2: Typography tokens & Dynamic Type.
-2. Unit 3.3: `AppButton` component (Primary, Secondary, Loading, Disabled states).
-3. Unit 3.4: `PriceView` component (Currency formatting, RTL/LTR layout, strike-through discount).
+My next actions (Phase 4):
+1. Phase 4: First vertical slice: FAQ, then Categories.
 
 ---
 
@@ -262,5 +263,8 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-18 — Unit 2.3 complete: Implemented `SessionState`, `SessionRepository`, and `AppSessionRepository` with Keychain sync and cold-start restore. Added `SessionRepositoryTests` suite (all 4 tests passing).
 - 2026-10-19 — Unit 2.4 complete: Implemented `AppBootstrapRepository` with defensive DTO -> Domain mapping logic. Created `BootstrapRepositoryTests` with 6 test scenarios passing (14 total tests in Data passing in 0.014s). Ready for Unit 2.5 (Splash routing).
 - 2026-10-20 — Implemented dynamic Flutter-compatible `UserAgent` formatter (`UserAgent.swift` & `UserAgentTests.swift`), integrated into `RequestBuilder` and `AppContainer`. Conformed `NetworkError` to `LocalizedError`. Built Unit 2.5 (`SplashView`, `MaintenanceView`, and `AppRootView` with retry action). All unit tests passing.
-- 2026-10-20 — Unit 3.1 complete: Created `Packages/DesignSystem` local package. Implemented `Color(hex:)`, semantic `AppTheme` tokens, and SwiftUI environment injection (`@Environment(\.appTheme)`). Added 11 tests across `ColorHexTests` and `AppThemeTests` (all passing). Wired `AppRootView` with live theme. Ready for Unit 3.2 (Typography).
+- 2026-10-20 — Unit 3.1 complete: Created `Packages/DesignSystem` local package. Implemented `Color(hex:)`, semantic `AppTheme` tokens, and SwiftUI environment injection (`@Environment(\.appTheme)`). Added 11 tests across `ColorHexTests` and `AppThemeTests` (all passing). Wired `AppRootView` with live theme.
+- 2026-10-21 — Unit 3.2 complete: Implemented `AppTypography` with Apple-native Dynamic Type scaling and monospaced price digits. Integrated `typography` into `AppTheme`. Added 4 test scenarios in `AppTypographyTests` (15 total tests passing in DesignSystem in 0.003s). App target built cleanly.
+- 2026-10-21 — Unit 3.3 complete: Implemented `AppButton` (primary, secondary, ghost, loading, and disabled states). Learned Swift 6 `@MainActor` test isolation and `@MainActor @Sendable` closures. Added 4 test scenarios in `AppButtonTests` (19 total tests passing in DesignSystem in 0.002s). Ready for Unit 3.4 (`PriceView`).
+- 2026-10-21 — Unit 3.4 & Phase 3 complete: Configured SPM resources and `Bundle.module` in `DesignSystem`. Built `PriceView`, `CurrencyLabel` with dynamic template SVG symbol and text fallback, and strikethrough discount pricing. Added 4 tests in `PriceViewTests` (23 total tests passing in DesignSystem in 0.005s). Phase 3 Minimum Design System is complete. Ready for Phase 4 (First Vertical Slice: FAQ & Categories).
 

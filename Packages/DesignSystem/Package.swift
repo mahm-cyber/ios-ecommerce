@@ -24,6 +24,9 @@ let package = Package(
             name: "DesignSystem",
             dependencies: [
                 .product(name: "Core", package: "Core")
+            ],
+            resources: [
+                .process("Resources")
             ]
         ),
         .testTarget(

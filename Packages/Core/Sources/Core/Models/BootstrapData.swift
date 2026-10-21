@@ -24,6 +24,8 @@ public struct CurrencyConfig: Sendable, Equatable {
         self.code = code
         self.isLeading = isLeading
     }
+    
+    public static let `default` = CurrencyConfig(code: "SAR", isLeading: false)
 }
 
 public struct ThemeConfig: Sendable, Equatable {
