@@ -7,8 +7,8 @@
 
 import SwiftUI
 import Data
-internal import Core
- 
+import Core
+import DesignSystem
 
 struct AppRootView: View {
     
@@ -17,37 +17,49 @@ struct AppRootView: View {
     var state: BootstrapState {
         container.bootstrapRepository.state
     }
-    var body: some View {
-        
+
+    private var currentTheme: AppTheme {
         switch state {
-        case .idle, .loading:
-            SplashView()
-                .task {
-                    try? await container.bootstrapRepository.load()
-                }
         case .loaded(let bootstrapData):
-            switch bootstrapData.storeStatus {
-            case .active:
-                ContentView(configuration: container.appConfiguration)
-            case .maintenance(let message):
-                MaintenanceView(message: message)
-            case .ordersDisabled(_):
-                ContentView(configuration: container.appConfiguration)
-            }
-        case .failed(let networkError):
-            ContentUnavailableView {
-                Label("Connection Error", systemImage: "wifi.exclamationmark")
-            } description: {
-                Text(networkError.localizedDescription)
-            } actions: {
-                Button("Retry") {
-                    Task {
+            return AppTheme(themeConfig: bootstrapData.theme)
+        case .idle, .loading, .failed:
+            return .default
+        }
+    }
+    
+    var body: some View {
+        Group {
+            switch state {
+            case .idle, .loading:
+                SplashView()
+                    .task {
                         try? await container.bootstrapRepository.load()
                     }
+            case .loaded(let bootstrapData):
+                switch bootstrapData.storeStatus {
+                case .active:
+                    ContentView(configuration: container.appConfiguration)
+                case .maintenance(let message):
+                    MaintenanceView(message: message)
+                case .ordersDisabled(_):
+                    ContentView(configuration: container.appConfiguration)
                 }
-                .buttonStyle(.borderedProminent)
+            case .failed(let networkError):
+                ContentUnavailableView {
+                    Label("Connection Error", systemImage: "wifi.exclamationmark")
+                } description: {
+                    Text(networkError.localizedDescription)
+                } actions: {
+                    Button("Retry") {
+                        Task {
+                            try? await container.bootstrapRepository.load()
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             }
         }
+        .appTheme(currentTheme)
     }
 }
 

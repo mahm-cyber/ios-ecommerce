@@ -207,40 +207,27 @@ Concepts to learn for this phase: target vs build configuration vs scheme; xccon
 
 ### 7. Current status
 
-**Phase 0 and Phase 1 are complete. Phase 2 (Session, `/initial` bootstrap & splash) is in progress: Unit 2.1 (Local Storage), Unit 2.2 (Composition Root Wiring), Unit 2.3 (Session Repository), and Unit 2.4 (Bootstrap Repository) are complete and verified.**
+**Phase 0, Phase 1, and Phase 2 are complete. Phase 3 (Minimum Design System) is in progress: Unit 3.1 (Design System Foundation, Hex Color Parser & Theme Tokens) is complete and verified.**
 
 Remote: `https://github.com/mahm-cyber/ios-ecommerce` on `main`.
 
 What exists and is verified:
 - **Phase 0:** Configurations, schemes, xcconfigs, Info.plist substitution, `AppConfiguration`, `AppContainer`, Swift Testing suite (18 cases passing).
 - **Phase 1 (Networking):** `Core` (errors), `Networking` (`HTTPMethod`, `RequestBuilder`, `Endpoint<T>`, `APIResponse<T>`, `ServerErrorPayload`, `HTTPTransport`, `TestTransport`, `NetworkClient` with session supplier closures and status check). All tests passing.
-- **Phase 2 (Unit 2.1 - Local Storage in `Packages/Data`):**
-  - `PreferenceStorage` protocol and `AppPreferenceStorage` (`@unchecked Sendable`, backed by `UserDefaults` with `isFirstRun` defaulting to true, `deviceID` lazy generation & persistence, `selectedLanguage` with device locale fallback).
-  - `KeychainStorage` protocol, `SystemKeychainStorage` (`@unchecked Sendable`, backed by native `Security` framework with `SecItemAdd`, `SecItemCopyMatching`, `SecItemDelete`, `wipeAll`, `service` namespace), and `KeychainStorage` string extension helpers.
-  - Test fakes: `TestPreferenceStorage` and `TestKeychainStorage`.
-  - Swift Testing test suites: `AppPreferenceStorageTests` and `KeychainStorageTests`.
-- **Phase 2 (Unit 2.2 - Composition Root Wiring):**
-  - `AppContainer` wired with `PreferenceStorage` and `KeychainStorage` with default parameter injection for testability.
-  - First-launch Keychain wipe logic executed on cold start (`isFirstRun == true` -> `keychainStorage.wipeAll()`, `isFirstRun = false`).
-  - Session supplier closures wired to `NetworkClient` for live `selectedLanguage`, `deviceID`, and `auth_token`.
-  - `AppContainerTests.swift` testing first-run wipe, subsequent run token preservation, and supplier wiring.
-- **Phase 2 (Unit 2.3 - Session Repository in `Packages/Data`):**
-  - `SessionState` enum (`.unauthenticated`, `.authenticated(token: String)`).
-  - `SessionRepository` protocol (`state`, `token`, `signIn(token:)`, `signOut()`).
-  - `AppSessionRepository` (`@Observable`, `@unchecked Sendable`, backed by `KeychainStorage` protocol) with in-memory token lookup and cold start hydration from Keychain.
-  - `SessionRepositoryTests.swift` with 4 test scenarios passing cleanly.
-- **Phase 2 (Unit 2.4 - Bootstrap Repository in `Packages/Data`):**
-  - Pure domain entities in `Packages/Core`: `StoreStatus`, `CurrencyConfig`, `ThemeConfig`, and `BootstrapData` (Option A Clean Architecture separation).
-  - State model in `Packages/Data`: `BootstrapState` enum (`.idle`, `.loading`, `.loaded(BootstrapData)`, `.failed(NetworkError)`).
-  - Contract in `Packages/Data`: `BootstrapRepository` protocol (`state`, `load() async throws`).
-  - `AppBootstrapRepository` (`@Observable`, `@unchecked Sendable`) with defensive DTO -> Domain mapping logic.
-  - `BootstrapRepositoryTests.swift` with 6 test scenarios passing cleanly using `TestTransport`.
-
-- **Phase 2 (Unit 2.5 - Splash, Routing & Dynamic User-Agent):**
-  - `UserAgent` formatter (`Packages/Networking/Sources/Networking/Request/UserAgent.swift`) generating dynamic backend-compatible User-Agent strings using `UIDevice` & `Bundle`. Tested via `UserAgentTests.swift`.
-  - Conformed `NetworkError` to `LocalizedError` in `Packages/Core/Sources/Core/NetworkError.swift` for descriptive server error messages.
-  - `SplashView`, `MaintenanceView`, and `AppRootView` implementing bootstrap state routing (`.idle`/`.loading` -> `SplashView`, `.loaded` -> `ContentView` / `MaintenanceView`, `.failed` -> `ContentUnavailableView` with retry action).
-  - Single `AppContainer` lifecycle instantiation in `IOS_ECommerceApp.swift`.
+- **Phase 2 (Session & Bootstrap):**
+  - Unit 2.1: `AppPreferenceStorage` (UserDefaults) & `SystemKeychainStorage` (Security framework).
+  - Unit 2.2: `AppContainer` storage wiring, first-run Keychain wipe, and supplier closures.
+  - Unit 2.3: `SessionRepository` and `AppSessionRepository` with Keychain sync and cold-start restore.
+  - Unit 2.4: Domain models (`StoreStatus`, `CurrencyConfig`, `ThemeConfig`, `BootstrapData`) and `AppBootstrapRepository`.
+  - Unit 2.5: `UserAgent` formatter matching Flutter, `NetworkError: LocalizedError`, and `AppRootView` bootstrap state routing (`SplashView`, `MaintenanceView`, `ContentView`, retry action).
+- **Phase 3 (Unit 3.1 - Design System Foundation & Theme Tokens):**
+  - Created `Packages/DesignSystem` local Swift package with Swift 6 mode, iOS 17+, dependent on `Core`.
+  - Linked `Packages/DesignSystem` to `IOS-ECommerce` target in `IOS-ECommerce.xcodeproj`.
+  - Implemented `Color(hex:)` and `Color(hex:fallback:)` in `Color+Hex.swift` supporting 6-digit (`#RRGGBB`), 8-digit (`#RRGGBBAA`), uppercase, lowercase, and malformed handling.
+  - Implemented semantic `AppTheme` struct (`primary`, `background`, `surface`, `textPrimary`, `textSecondary`, `border`, `error`, `success`), `AppTheme.default`, and dynamic `init(themeConfig:)` mapping brand primary colors.
+  - Implemented `AppThemeEnvironment.swift` with `AppThemeKey: EnvironmentKey`, `EnvironmentValues.appTheme`, and `View.appTheme(_:)` modifier.
+  - Wired `AppRootView` to inject the ambient `currentTheme` derived from `BootstrapData.theme` down the view tree.
+  - Swift Testing test suites: `ColorHexTests` (7 scenarios) and `AppThemeTests` (4 scenarios) passing cleanly (11 tests in 0.003s). Full app target builds cleanly.
 
 Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 0: I wrote config, schemes, container, app entry, single-assert test. Given on request: final `AppConfiguration`, test cases, nonisolated cleanup.
@@ -250,9 +237,12 @@ Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 2 (Unit 2.3): I wrote `SessionState`, `SessionRepository`, and `AppSessionRepository`. Given on request: `SessionRepositoryTests.swift` and `@unchecked Sendable` conformance.
 - Phase 2 (Unit 2.4): I wrote `StoreStatus`, `CurrencyConfig`, `ThemeConfig`, `BootstrapData`, `BootstrapState`, `BootstrapRepository`, and `AppBootstrapRepository`. Given on request: `BootstrapRepositoryTests.swift`, `TestTransport.swift`, and `Networking` DTO public accessors.
 - Phase 2 (Unit 2.5): I wrote `SplashView`, `MaintenanceView`, and `AppRootView`. Given on request: `UserAgent.swift`, `UserAgentTests.swift`, `NetworkError: LocalizedError`, and retry integration.
+- Phase 3 (Unit 3.1): I set up `Packages/DesignSystem`, linked it in Xcode, drafted `AppTheme.swift` and `AppThemeEnvironment.swift`. Given on request: `ColorHexTests.swift`, `Color+Hex.swift`, `AppTheme` completion, `AppThemeTests.swift`, and `AppRootView` environment wiring.
 
 My next actions (Phase 3):
-1. Phase 3: Home & Catalog features.
+1. Unit 3.2: Typography tokens & Dynamic Type.
+2. Unit 3.3: `AppButton` component (Primary, Secondary, Loading, Disabled states).
+3. Unit 3.4: `PriceView` component (Currency formatting, RTL/LTR layout, strike-through discount).
 
 ---
 
@@ -272,4 +262,5 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-18 — Unit 2.3 complete: Implemented `SessionState`, `SessionRepository`, and `AppSessionRepository` with Keychain sync and cold-start restore. Added `SessionRepositoryTests` suite (all 4 tests passing).
 - 2026-10-19 — Unit 2.4 complete: Implemented `AppBootstrapRepository` with defensive DTO -> Domain mapping logic. Created `BootstrapRepositoryTests` with 6 test scenarios passing (14 total tests in Data passing in 0.014s). Ready for Unit 2.5 (Splash routing).
 - 2026-10-20 — Implemented dynamic Flutter-compatible `UserAgent` formatter (`UserAgent.swift` & `UserAgentTests.swift`), integrated into `RequestBuilder` and `AppContainer`. Conformed `NetworkError` to `LocalizedError`. Built Unit 2.5 (`SplashView`, `MaintenanceView`, and `AppRootView` with retry action). All unit tests passing.
+- 2026-10-20 — Unit 3.1 complete: Created `Packages/DesignSystem` local package. Implemented `Color(hex:)`, semantic `AppTheme` tokens, and SwiftUI environment injection (`@Environment(\.appTheme)`). Added 11 tests across `ColorHexTests` and `AppThemeTests` (all passing). Wired `AppRootView` with live theme. Ready for Unit 3.2 (Typography).
 
