@@ -17,13 +17,15 @@ final class AppContainer {
     public let keychainStorage: KeychainStorage
     public let sessionRepository: SessionRepository
     public let bootstrapRepository: BootstrapRepository
+    public let faqRepository: FAQRepository
 
     init(
         appConfiguration: AppConfiguration,
         preferenceStorage: PreferenceStorage = AppPreferenceStorage(),
         keychainStorage: KeychainStorage = SystemKeychainStorage(),
         sessionRepository: SessionRepository? = nil,
-        bootstrapRepository: BootstrapRepository? = nil
+        bootstrapRepository: BootstrapRepository? = nil,
+        faqRepository: FAQRepository? = nil
     ) {
         self.preferenceStorage = preferenceStorage
         self.keychainStorage = keychainStorage
@@ -67,6 +69,10 @@ final class AppContainer {
 
         self.bootstrapRepository = bootstrapRepository ?? AppBootstrapRepository(
             networkClient: client
+        )
+
+        self.faqRepository = faqRepository ?? AppFAQRepository(
+            networkingClient: client
         )
     }
 }

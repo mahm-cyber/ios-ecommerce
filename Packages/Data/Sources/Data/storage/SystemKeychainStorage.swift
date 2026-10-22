@@ -78,7 +78,12 @@ public struct SystemKeychainStorage: KeychainStorage, @unchecked Sendable {
             kSecAttrService as String: service,
         ]
 
-        let status = SecItemDelete(query as CFDictionary)
+        var status = SecItemDelete(query as CFDictionary)
+        #if os(macOS)
+        while status == errSecSuccess {
+            status = SecItemDelete(query as CFDictionary)
+        }
+        #endif
 
         guard status == errSecSuccess || status == errSecItemNotFound else {
             throw KeychainError.unhandledError(status: status)

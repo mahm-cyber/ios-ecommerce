@@ -38,11 +38,17 @@ struct AppRootView: View {
             case .loaded(let bootstrapData):
                 switch bootstrapData.storeStatus {
                 case .active:
-                    ContentView(configuration: container.appConfiguration)
+                    ContentView(
+                        configuration: container.appConfiguration,
+                        faqRepository: container.faqRepository
+                    )
                 case .maintenance(let message):
                     MaintenanceView(message: message)
                 case .ordersDisabled(_):
-                    ContentView(configuration: container.appConfiguration)
+                    ContentView(
+                        configuration: container.appConfiguration,
+                        faqRepository: container.faqRepository
+                    )
                 }
             case .failed(let networkError):
                 ContentUnavailableView {

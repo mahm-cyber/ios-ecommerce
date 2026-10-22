@@ -6,20 +6,44 @@
 //
 
 import SwiftUI
+import FAQFeature
+import Data
 
 struct ContentView: View {
-    
     let configuration: AppConfiguration
-    
+    let faqRepository: FAQRepository?
+
+    init(configuration: AppConfiguration, faqRepository: FAQRepository? = nil) {
+        self.configuration = configuration
+        self.faqRepository = faqRepository
+    }
+
     var body: some View {
-        VStack(spacing: 16) {
-            Text("Cuddluxe")
-                .font(.largeTitle)
-                .bold()
-            Text("Environment: \(configuration.environment.rawValue)")
-            Text("Host: \(configuration.baseURL.host() ?? "")")
+        NavigationStack {
+            VStack(spacing: 20) {
+                Text("Cuddluxe")
+                    .font(.largeTitle)
+                    .bold()
+                Text("Environment: \(configuration.environment.rawValue)")
+                Text("Host: \(configuration.baseURL.host() ?? "")")
+
+                if let faqRepository {
+                    NavigationLink {
+                        FAQView(repository: faqRepository)
+                    } label: {
+                        Text("Frequently Asked Questions")
+                            .font(.headline)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.accentColor.opacity(0.12))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.horizontal, 24)
+                }
+            }
+            .padding()
+            .navigationTitle("Home")
         }
-        .padding()
     }
 }
 

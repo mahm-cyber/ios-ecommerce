@@ -241,9 +241,12 @@ Who wrote what, so the next mentor knows what I have and have not practised:
 - Phase 3 (Unit 3.2): I drafted `AppTypography.swift`, added `typography` property to `AppTheme`, and created `AppTypographyTests.swift`. Given on request: `AppTypography.swift` completion and `AppTypographyTests.swift` test suite.
 - Phase 3 (Unit 3.3): I implemented `AppButton.swift` (primary, secondary, ghost, loading, disabled) and wrote `AppButtonTests.swift` covering configuration, action execution, and variants. Given on request: `@MainActor` testing isolation guidance and `@MainActor @Sendable` action typing.
 - Phase 3 (Unit 3.4): I implemented `CurrencyEnvironment.swift`, `PriceView.swift` with currency formatting, dynamic vector SAR icon support with `Bundle.module`, and strike-through discounts. Given on request: `PriceViewTests.swift` and SPM resource bundle configuration.
+- Phase 4 (Unit 4.1): I created `FAQItem` domain model in `Core`, `QuestionsResponseDTO` / `QuestionItemDTO` and `Endpoint.questions` in `Networking`, and `FAQEndpointTests.swift` (2 tests passing).
+- Phase 4 (Unit 4.2): I wrote `String+HTML.swift`, `FAQRepository` protocol, and `AppFAQRepository` with DTO to domain mapping in `Data`. Wired `faqRepository` into `AppContainer`. Given on request: `FAQRepositoryTests.swift` (3 tests passing).
+- Phase 4 (Unit 4.3): Set up `Packages/Features` package with `FAQFeature` target linked to app target. Implemented `FAQState`, `FAQViewModel` with Swift 6 `@Observable` and `@MainActor`, `FAQItemRow` accordion component with animated chevron and theme tokens, and `FAQView` handling loading, empty, error, and loaded states with pull-to-refresh. Added `FAQViewModelTests` (5 test scenarios). Wired into `AppRootView` and `ContentView`. All 79 package tests passing and app target building cleanly.
 
 My next actions (Phase 4):
-1. Phase 4: First vertical slice: FAQ, then Categories.
+1. Unit 4.4: App navigation wiring and Categories slice (`CategoriesFeature`).
 
 ---
 
@@ -267,4 +270,6 @@ Add one line per session: date, what I built, what was reviewed, what was decide
 - 2026-10-21 — Unit 3.2 complete: Implemented `AppTypography` with Apple-native Dynamic Type scaling and monospaced price digits. Integrated `typography` into `AppTheme`. Added 4 test scenarios in `AppTypographyTests` (15 total tests passing in DesignSystem in 0.003s). App target built cleanly.
 - 2026-10-21 — Unit 3.3 complete: Implemented `AppButton` (primary, secondary, ghost, loading, and disabled states). Learned Swift 6 `@MainActor` test isolation and `@MainActor @Sendable` closures. Added 4 test scenarios in `AppButtonTests` (19 total tests passing in DesignSystem in 0.002s). Ready for Unit 3.4 (`PriceView`).
 - 2026-10-21 — Unit 3.4 & Phase 3 complete: Configured SPM resources and `Bundle.module` in `DesignSystem`. Built `PriceView`, `CurrencyLabel` with dynamic template SVG symbol and text fallback, and strikethrough discount pricing. Added 4 tests in `PriceViewTests` (23 total tests passing in DesignSystem in 0.005s). Phase 3 Minimum Design System is complete. Ready for Phase 4 (First Vertical Slice: FAQ & Categories).
+- 2026-10-22 — Unit 4.1 & Unit 4.2 complete: Built `FAQItem` domain entity in `Core`, `QuestionsResponseDTO` & `Endpoint.questions` in `Networking` (2 tests passing). Implemented `String.strippingHTML()` and `AppFAQRepository` with DTO to domain mapping in `Data`. Wired `faqRepository` into `AppContainer`. Added `FAQRepositoryTests` (3 tests passing). App target built cleanly. Ready for Unit 4.3 (Features & `FAQView`).
+- 2026-10-22 — Unit 4.3 complete: Created `Packages/Features` package with `FAQFeature` target linked to app target. Built `FAQState`, `FAQViewModel` with `@Observable` & `@MainActor`, `FAQItemRow` accordion with smooth animation, and `FAQView` with loading, empty, and error retry states. Added `FAQViewModelTests` (5 test scenarios). Wired into `AppRootView` and `ContentView`. All 79 package tests passing and app target building cleanly. Ready for Unit 4.4 (Categories slice).
 
