@@ -10,17 +10,43 @@ import Foundation
 
 
 public struct Categories: Codable, Sendable {
-    let categoriesId: Int?
-    let categoriesCode: String?
-    let categoriesParentId: Int?
-    let categoriesImg: String?
-    let categoriesBannerImg: String?
-    let categoriesWebBannerImg: String?
-    let categoriesFollowDeliveryTime: String?
-    let categoriesShowInMenu: String?
-    let categoriesTitle: String?
-    let categoriesSlug: String?
-    let subcategories: [Categories]?
+    public let categoriesId: Int?
+    public let categoriesCode: String?
+    public let categoriesParentId: Int?
+    public  let categoriesImg: String?
+    public let categoriesBannerImg: String?
+    public let categoriesWebBannerImg: String?
+    public let categoriesFollowDeliveryTime: String?
+    public let categoriesShowInMenu: String?
+    public let categoriesTitle: String?
+    public let categoriesSlug: String?
+    public let subcategories: [Categories]?
+    
+    public init(
+        categoriesId: Int? = nil,
+        categoriesCode: String? = nil,
+        categoriesParentId: Int? = nil,
+        categoriesImg: String? = nil,
+        categoriesBannerImg: String? = nil,
+        categoriesWebBannerImg: String? = nil,
+        categoriesFollowDeliveryTime: String? = nil,
+        categoriesShowInMenu: String? = nil,
+        categoriesTitle: String? = nil,
+        categoriesSlug: String? = nil,
+        subcategories: [Categories]? = nil
+    ) {
+        self.categoriesId = categoriesId
+        self.categoriesCode = categoriesCode
+        self.categoriesParentId = categoriesParentId
+        self.categoriesImg = categoriesImg
+        self.categoriesBannerImg = categoriesBannerImg
+        self.categoriesWebBannerImg = categoriesWebBannerImg
+        self.categoriesFollowDeliveryTime = categoriesFollowDeliveryTime
+        self.categoriesShowInMenu = categoriesShowInMenu
+        self.categoriesTitle = categoriesTitle
+        self.categoriesSlug = categoriesSlug
+        self.subcategories = subcategories
+    }
 
     enum CodingKeys: String, CodingKey {
         case categoriesId = "categories_id"

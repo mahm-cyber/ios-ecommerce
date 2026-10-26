@@ -76,13 +76,40 @@ public final class AppBootstrapRepository: BootstrapRepository, @unchecked Senda
             primaryColorHex: initial.account?.mobileAppColors?.accountsColorsBackground1,
             logoURL: initial.account?.accountsImgRtl ?? initial.account?.accountsImgLtr
         )
+        
+        // 4. Categories
+        let categories = initial.categories?
+            .compactMap { $0 }
+            .compactMap{ mapCategory($0) } ?? []
 
         return BootstrapData(
             storeStatus: status,
             currency: currency,
             theme: theme,
             minIosVersion: initial.setting?.iosVersion,
-            defaultLanguage: initial.setting?.settingsDefaultLanguage ?? initial.defaultLang
+            defaultLanguage: initial.setting?.settingsDefaultLanguage ?? initial.defaultLang,
+            categories: categories
+        )
+    }
+    
+    private func mapCategory(_ dto: Categories) -> CategoryItem? {
+        guard let id = dto.categoriesId,
+              let title = dto.categoriesTitle,
+              !title.isEmpty else {
+            return nil
+        }
+        
+        let subcategories = dto.subcategories?
+            .compactMap { mapCategory($0) } ?? []
+        
+        return CategoryItem(
+            id: id,
+            title: title,
+            slug: dto.categoriesSlug ?? "",
+            imageName: dto.categoriesImg,
+            bannerImageName: dto.categoriesBannerImg,
+            parentId: dto.categoriesParentId,
+            subcategories: subcategories
         )
     }
 }

@@ -46,18 +46,21 @@ public struct BootstrapData: Equatable, Sendable {
     public let theme: ThemeConfig
     public let minIosVersion: String?
     public let defaultLanguage: String?
+    public let categories: [CategoryItem]
     
     public init(
         storeStatus: StoreStatus,
         currency: CurrencyConfig,
         theme: ThemeConfig,
         minIosVersion: String?,
-        defaultLanguage: String?
+        defaultLanguage: String?,
+        categories: [CategoryItem] = []
     ) {
         self.storeStatus = storeStatus
         self.currency = currency
         self.theme = theme
         self.minIosVersion = minIosVersion
         self.defaultLanguage = defaultLanguage
+        self.categories = categories
     }
 }
