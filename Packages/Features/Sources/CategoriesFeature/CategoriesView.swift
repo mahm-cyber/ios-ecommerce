@@ -34,7 +34,10 @@ public struct CategoriesView: View {
                                         category: category,
                                         isSelected: selectedCategoryID == category.id) {
                                             withAnimation(
-                                                .easeInOut(duration: 0.25)
+                                                .spring(
+                                                    response: 0.35,
+                                                    dampingFraction: 0.8
+                                                )
                                             ) {
                                                 if selectedCategoryID == category.id {
                                                     selectedCategoryID = nil
@@ -53,13 +56,45 @@ public struct CategoriesView: View {
                             if let selected = row.first(where: { $0.id == selectedCategoryID }),
                                !selected.subcategories.isEmpty {
                                 VStack(spacing: 8) {
-                                    ForEach(selected.subcategories) { sub in
-                                        
+                                    
+                                    ForEach(
+                                        Array(
+                                            selected.subcategories.enumerated()
+                                        ),
+                                        id: \.element.id
+                                    ) {
+ index,
+ sub in
                                         SubcategoryRow(
                                             title: sub.title,
                                             imageName: sub.imageName) {
                                                 //TODO: Navigation to subcategory products
                                             }
+                                            .transition(
+                                                .asymmetric(
+                                                    insertion: .opacity
+                                                        .combined(
+                                                            with:
+                                                                    .move(
+                                                                        edge: .top
+                                                                    )
+                                                        )
+                                                        .animation(
+                                                            .spring(
+                                                                response: 0.35,
+                                                                dampingFraction: 0.75
+                                                            ).delay(Double(index) * 0.06),
+                                                            
+                                                            
+                                                        ),
+                                                    removal: .opacity
+                                                        .animation(
+                                                            .easeInOut(
+                                                                duration: 0.15
+                                                            )
+                                                        )
+                                                )
+                                            )
                                     }
                                     
                                     // "الكل" (All) row
@@ -69,10 +104,18 @@ public struct CategoriesView: View {
                                     ) {
                                         // Navigate to all products in this category
                                     }
+                                    .transition(
+                                                .asymmetric(
+                                                    insertion: .opacity
+                                                        .combined(with: .move(edge: .top))
+                                                        .animation(.spring(response: 0.35, dampingFraction: 0.75).delay(Double(selected.subcategories.count) * 0.06)),
+                                                    removal: .opacity
+                                                        .animation(.easeInOut(duration: 0.15))
+                                                )
+                                            )
                                 }
-                                .transition(
-                                    .opacity.combined(with: .move(edge: .top))
-                                )
+                                 
+                                .clipped()
                             }
                         }
                     }

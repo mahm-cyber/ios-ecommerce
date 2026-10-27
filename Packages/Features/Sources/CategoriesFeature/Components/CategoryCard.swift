@@ -28,17 +28,25 @@ public struct CategoryCard: View {
         self.onTap = onTap
     }
     
+    private var categoryTheme: CategoryCardTheme {
+        theme.categoryCardTheme
+    }
+    
     public var body: some View {
         Button(action: onTap) {
             VStack(spacing: 8) {
                 ZStack {
-                    if isSelected {
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(theme.primary.opacity(0.85))
-                            .offset(y: 4)
-                    }
+                  
+                        CategoryCardShape()
+                        .fill(
+                            isSelected ?   categoryTheme.activeBackground : categoryTheme.background
+                        )
+                            .rotationEffect( isSelected ? .degrees(-7) : .zero)
+                            .scaleEffect(1.02)
+                            .transition(.scale.combined(with: .opacity))
                     
-                    RoundedRectangle(cornerRadius: 20)
+                    
+                    CategoryCardShape()
                         .fill(theme.surface)
                         .overlay {
                             
@@ -54,7 +62,7 @@ public struct CategoryCard: View {
                                     case .success(let image ):
                                         image
                                             .resizable()
-                                            .scaledToFill()
+                                            .scaledToFit()
                                     case .failure:
                                         Image(systemName: "photo")
                                             .foregroundStyle(theme.textSecondary)
@@ -69,16 +77,27 @@ public struct CategoryCard: View {
                             {
                                 Image(systemName: "photo")
                                     .font(.system(size: 32))
-                                    .foregroundStyle(theme.textSecondary)
+                                    .foregroundStyle(
+                                        categoryTheme.background
+                                    )
                             }
                         }
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .clipShape(CategoryCardShape())
+                        .shadow(
+                            color: theme.primary.opacity(0.15),
+                            radius: 4,
+                            x: 0,
+                            y: 2,
+                        )
+                        .scaleEffect(isSelected ?  1.0 : 0.97)
+                         
                 }
                 .aspectRatio(1, contentMode: .fit)
+                .scaleEffect(isSelected ?  0.80 : 1.0)
                 
                 Text(category.title)
                     .font(theme.typography.headline)
-                    .foregroundStyle(theme.textPrimary)
+                    .foregroundStyle(categoryTheme.title)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .frame(maxWidth: .infinity)

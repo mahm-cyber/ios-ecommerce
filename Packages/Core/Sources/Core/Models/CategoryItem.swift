@@ -39,6 +39,7 @@ public struct CategoryItem: Identifiable, Sendable, Equatable, Hashable {
         id: 1,
         title: "Clothing",
         slug: "clothing",
+        imageName: "Rectangle 135.webp",
         subcategories: [
             CategoryItem(id: 2, title: "T-Shirts", slug: "t-shirts", parentId: 1),
             CategoryItem(id: 3, title: "Hoodies", slug: "hoodies", parentId: 1)

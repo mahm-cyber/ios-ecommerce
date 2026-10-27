@@ -25,74 +25,46 @@ public  struct SubcategoryRow: View {
         self.imageName = imageName
         self.onTap = onTap
     }
+    
+    public var textTheme: TextTheme {
+        theme.textTheme
+    }
+    public var categoryTheme: CategoryCardTheme {
+        theme.categoryCardTheme
+    }
     public  var body: some View {
         Button(action: onTap) {
             HStack(spacing: 12) {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(theme.textSecondary.opacity(0.6))
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(
+                        categoryTheme.activeBackground.opacity(0.6)
+                    )
                 
                 Spacer()
                 
+               
                 Text(title)
-                    .font(theme.typography.headline)
-                    .foregroundStyle(theme.textPrimary)
+                    .font(theme.typography.caption)
+                    .foregroundStyle(categoryTheme.subTitle)
                 
-                if let imageName = imageName, let url = imageURLBuilder.buildURL(
-                    image: imageName,
-                    folderName: .categories,
-                    folderType: .thumbnail
-                ) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                            
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFill()
-                            
-                        case .empty:
-                            ProgressView()
-                            
-                        case  .failure:
-                            thumbnailFallback
-                        @unknown default:
-                            EmptyView()
-                        }
-                    }
-                    .frame(width: 44, height: 44)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                } else {
-                    thumbnailFallback
-                }
-                
+                AppAPIImage(imageName)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
-            .background(theme.surface)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 14)
+            .background(
+                SubcategoryRowShape()
+                    .fill(categoryTheme.background)
             )
-            .overlay {
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(
-                        theme.border.opacity(0.5), lineWidth: 1
-                    )
-            }
+            .clipShape(SubcategoryRowShape())
+             
+        
         }
+         
         .buttonStyle(.plain)
     }
     
-    private var thumbnailFallback: some View {
-        RoundedRectangle(cornerRadius: 10)
-            .fill(theme.border.opacity(0.3))
-            .frame(width: 44, height: 44)
-            .overlay {
-                Image(systemName: "photo")
-                    .font(.system(size: 16))
-                    .foregroundStyle(theme.textSecondary)
-            }
-    }
+
 }
 
 #Preview {
