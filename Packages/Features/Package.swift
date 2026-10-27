@@ -11,6 +11,10 @@ let package = Package(
             name: "FAQFeature",
             targets: ["FAQFeature"]
         ),
+        .library(
+            name: "CategoriesFeature",
+            targets: ["CategoriesFeature"]
+        )
     ],
     dependencies: [
         .package(name: "Core", path: "../Core"),
@@ -18,6 +22,7 @@ let package = Package(
         .package(name: "DesignSystem", path: "../DesignSystem")
     ],
     targets: [
+        // MARK: FAQ
         .target(
             name: "FAQFeature",
             dependencies: [
@@ -29,6 +34,20 @@ let package = Package(
         .testTarget(
             name: "FAQFeatureTests",
             dependencies: ["FAQFeature"]
+        ),
+        
+        // MARK: Categories
+        .target(
+            name: "CategoriesFeature",
+            dependencies: [
+                .product(name: "Core", package: "Core"),
+                .product(name: "Data", package: "Data"),
+                .product(name: "DesignSystem", package: "DesignSystem")
+            ]
+        ),
+        .testTarget(
+            name: "CategoriesFeatureTests",
+            dependencies: ["CategoriesFeature"]
         ),
     ],
     swiftLanguageModes: [.v6]

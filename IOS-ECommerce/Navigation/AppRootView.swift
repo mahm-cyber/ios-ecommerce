@@ -21,10 +21,25 @@ struct AppRootView: View {
     private var currentTheme: AppTheme {
         switch state {
         case .loaded(let bootstrapData):
-            return AppTheme(themeConfig: bootstrapData.theme)
+            return AppTheme.init(themeConfig: bootstrapData.theme)
         case .idle, .loading, .failed:
             return .default
         }
+    }
+    
+    private var config: AppConfiguration {
+        return container.appConfiguration
+    }
+    
+    private var imageURLBuilder: ImageURLBuilder {
+        let imagesURL: URL? = {
+            if case .loaded(let bootstrapData) = state {
+                return bootstrapData.imagesURL
+            }
+            return config.baseURL
+        }()
+        
+        return ImageURLBuilder(baseURL: imagesURL, accountID: config.accountID)
     }
     
     var body: some View {
@@ -47,7 +62,8 @@ struct AppRootView: View {
                 case .ordersDisabled(_):
                     ContentView(
                         configuration: container.appConfiguration,
-                        faqRepository: container.faqRepository
+                        faqRepository: container.faqRepository,
+                        categoriesRepository: container.categoriesRepository
                     )
                 }
             case .failed(let networkError):
@@ -66,6 +82,7 @@ struct AppRootView: View {
             }
         }
         .appTheme(currentTheme)
+        .imageURLBuilder(imageURLBuilder)
     }
 }
 

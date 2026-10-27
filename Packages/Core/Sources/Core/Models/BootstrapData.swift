@@ -47,6 +47,7 @@ public struct BootstrapData: Equatable, Sendable {
     public let minIosVersion: String?
     public let defaultLanguage: String?
     public let categories: [CategoryItem]
+    public let imagesURL: URL?
     
     public init(
         storeStatus: StoreStatus,
@@ -54,7 +55,8 @@ public struct BootstrapData: Equatable, Sendable {
         theme: ThemeConfig,
         minIosVersion: String?,
         defaultLanguage: String?,
-        categories: [CategoryItem] = []
+        categories: [CategoryItem] = [],
+        imagesURL: URL? = nil
     ) {
         self.storeStatus = storeStatus
         self.currency = currency
@@ -62,5 +64,6 @@ public struct BootstrapData: Equatable, Sendable {
         self.minIosVersion = minIosVersion
         self.defaultLanguage = defaultLanguage
         self.categories = categories
+        self.imagesURL = imagesURL
     }
 }

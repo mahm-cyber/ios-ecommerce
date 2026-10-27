@@ -3,18 +3,19 @@ import Core
 import Data
 import DesignSystem
 
+
 public struct FAQView: View {
     @Environment(\.appTheme) private var theme
     @State private var viewModel: FAQViewModel
-
+    
     public init(viewModel: FAQViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
-
+    
     public init(repository: FAQRepository) {
         _viewModel = State(initialValue: FAQViewModel(repository: repository))
     }
-
+    
     public var body: some View {
         Group {
             switch viewModel.state {
@@ -22,38 +23,18 @@ public struct FAQView: View {
                 ProgressView()
                     .tint(theme.primary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+                
             case .empty:
                 ContentUnavailableView(
                     "No Questions Found",
                     systemImage: "questionmark.circle",
                     description: Text("There are no frequently asked questions available right now.")
                 )
-
+                
             case .failed(let message):
-                VStack(spacing: 16) {
-                    Image(systemName: "exclamationmark.triangle")
-                        .font(.system(size: 48))
-                        .foregroundStyle(theme.error)
-
-                    Text("Something Went Wrong")
-                        .font(theme.typography.title3)
-                        .foregroundStyle(theme.textPrimary)
-
-                    Text(message)
-                        .font(theme.typography.body)
-                        .foregroundStyle(theme.textSecondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 24)
-
-                    AppButton("Try Again", variant: .primary) {
-                        Task { await viewModel.load() }
-                    }
-                    .padding(.horizontal, 32)
-                    .padding(.top, 8)
+                ErrorStateView(message) {
+                    Task { await viewModel.load() }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-
             case .loaded(let items):
                 ScrollView {
                     LazyVStack(spacing: 12) {
@@ -76,9 +57,9 @@ public struct FAQView: View {
         }
         .background(theme.background.ignoresSafeArea())
         .navigationTitle("FAQ")
-        #if os(iOS)
+#if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
-        #endif
+#endif
         .task {
             if viewModel.state == .idle {
                 await viewModel.load()
@@ -89,8 +70,8 @@ public struct FAQView: View {
 
 
 private struct PreviewFAQRepository: FAQRepository {
-
-
+    
+    
     let items: [FAQItem]
     let shouldFail: Bool
     

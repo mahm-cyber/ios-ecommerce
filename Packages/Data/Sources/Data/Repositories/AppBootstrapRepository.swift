@@ -81,6 +81,10 @@ public final class AppBootstrapRepository: BootstrapRepository, @unchecked Senda
         let categories = initial.categories?
             .compactMap { $0 }
             .compactMap{ mapCategory($0) } ?? []
+        var imagesURL: URL? = nil
+        if let account = initial.account,let websiteURL = account.accountsWebsiteUrl {
+            imagesURL = URL(string: websiteURL)
+        }
 
         return BootstrapData(
             storeStatus: status,
@@ -88,7 +92,8 @@ public final class AppBootstrapRepository: BootstrapRepository, @unchecked Senda
             theme: theme,
             minIosVersion: initial.setting?.iosVersion,
             defaultLanguage: initial.setting?.settingsDefaultLanguage ?? initial.defaultLang,
-            categories: categories
+            categories: categories,
+            imagesURL: imagesURL
         )
     }
     
