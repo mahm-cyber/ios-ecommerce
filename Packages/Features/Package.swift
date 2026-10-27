@@ -14,6 +14,10 @@ let package = Package(
         .library(
             name: "CategoriesFeature",
             targets: ["CategoriesFeature"]
+        ),
+        .library(
+            name: "ProductsFeature",
+            targets: ["ProductsFeature"]
         )
     ],
     dependencies: [
@@ -48,6 +52,20 @@ let package = Package(
         .testTarget(
             name: "CategoriesFeatureTests",
             dependencies: ["CategoriesFeature"]
+        ),
+
+        // MARK: Products
+        .target(
+            name: "ProductsFeature",
+            dependencies: [
+                .product(name: "Core", package: "Core"),
+                .product(name: "Data", package: "Data"),
+                .product(name: "DesignSystem", package: "DesignSystem")
+            ]
+        ),
+        .testTarget(
+            name: "ProductsFeatureTests",
+            dependencies: ["ProductsFeature"]
         ),
     ],
     swiftLanguageModes: [.v6]
