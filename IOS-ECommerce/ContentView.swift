@@ -9,20 +9,24 @@ import SwiftUI
 import FAQFeature
 import Data
 import CategoriesFeature
+import ProductsFeature
 
 struct ContentView: View {
     let configuration: AppConfiguration
     let faqRepository: FAQRepository?
     let categoriesRepository: CategoriesRepository?
+    let productesRepository: ProductsRepository?
 
     init(
         configuration: AppConfiguration,
         faqRepository: FAQRepository? = nil,
-        categoriesRepository: CategoriesRepository? = nil
+        categoriesRepository: CategoriesRepository? = nil,
+        productesRepository: ProductsRepository? = nil
     ) {
         self.configuration = configuration
         self.faqRepository = faqRepository
         self.categoriesRepository = categoriesRepository
+        self.productesRepository = productesRepository
     }
 
     var body: some View {
@@ -54,6 +58,21 @@ struct ContentView: View {
                         
                     } label: {
                         Text("Categories")
+                            .font(.headline)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.accentColor.opacity(0.12))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.horizontal, 24)
+                }
+                
+                if let productesRepository {
+                    NavigationLink {
+                        ProductsView(repository: productesRepository)
+                        
+                    } label: {
+                        Text("Products")
                             .font(.headline)
                             .padding()
                             .frame(maxWidth: .infinity)

@@ -55,7 +55,8 @@ struct AppRootView: View {
                 case .active:
                     ContentView(
                         configuration: container.appConfiguration,
-                        faqRepository: container.faqRepository
+                        faqRepository: container.faqRepository,
+                        productesRepository: container.productsRepository
                     )
                 case .maintenance(let message):
                     MaintenanceView(message: message)
@@ -63,7 +64,8 @@ struct AppRootView: View {
                     ContentView(
                         configuration: container.appConfiguration,
                         faqRepository: container.faqRepository,
-                        categoriesRepository: container.categoriesRepository
+                        categoriesRepository: container.categoriesRepository,
+                        productesRepository: container.productsRepository
                     )
                 }
             case .failed(let networkError):

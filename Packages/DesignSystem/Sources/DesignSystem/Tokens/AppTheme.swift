@@ -12,7 +12,8 @@ public struct AppTheme: Sendable, Equatable {
     public let success: Color
     public let typography: AppTypography
     public let categoryCardTheme: CategoryCardTheme
-    public let textTheme: TextTheme
+    public let text: TextTheme
+    public let product: ProductCardTheme
 
     public init(
         primary: Color,
@@ -25,7 +26,9 @@ public struct AppTheme: Sendable, Equatable {
         success: Color = Color(hex: "#118C4A", fallback: .green),
         typography: AppTypography = .default,
         categoryCardTheme: CategoryCardTheme = .default,
-        textTheme: TextTheme = TextTheme()
+        text: TextTheme = TextTheme(),
+        product: ProductCardTheme = .default
+        
     ) {
         self.primary = primary
         self.background = background
@@ -37,7 +40,8 @@ public struct AppTheme: Sendable, Equatable {
         self.success = success
         self.typography = typography
         self.categoryCardTheme = categoryCardTheme
-        self.textTheme = textTheme
+        self.text = text
+        self.product = product
     }
 
     public init(
@@ -57,6 +61,19 @@ public struct AppTheme: Sendable, Equatable {
             title:  textTheme.primary,
             subTitle:  textTheme.secondary
         )
+        
+        let product = ProductCardTheme(
+            background: fallbackTheme.surface,
+            imageBackground: Color(hex: "#EEEBEF", fallback: .gray),
+            title: textTheme.primary,
+            category: textTheme.secondary,
+            favorite: Color(hex: "#FF383C", fallback: .red),
+            unfavorite: Color(hex: "#868483", fallback: .gray),
+            favoriteBackground:  Color(hex: "#F5F5F5", fallback: .gray),
+            addToCartBackground: Color(hex: "#F5F5F5", fallback: .gray),
+            onAddToCart: primaryColor,
+            rate: Color(hex: "#FEBC2F", fallback: .yellow)
+        )
 
         self.init(
             primary: primaryColor,
@@ -67,7 +84,8 @@ public struct AppTheme: Sendable, Equatable {
             border: fallbackTheme.border,
             error: fallbackTheme.error,
             success: fallbackTheme.success,
-            categoryCardTheme: categoryCardTheme
+            categoryCardTheme: categoryCardTheme,
+            product: product
         )
     }
 
@@ -81,6 +99,6 @@ public struct AppTheme: Sendable, Equatable {
         error: Color(hex: "#DB0B0B", fallback: .red),
         success: Color(hex: "#118C4A", fallback: .green),
         categoryCardTheme: .default,
-        textTheme: TextTheme()
+        text: TextTheme()
     )
 }

@@ -27,7 +27,7 @@ public  struct SubcategoryRow: View {
     }
     
     public var textTheme: TextTheme {
-        theme.textTheme
+        theme.text
     }
     public var categoryTheme: CategoryCardTheme {
         theme.categoryCardTheme
@@ -48,7 +48,11 @@ public  struct SubcategoryRow: View {
                     .font(theme.typography.caption)
                     .foregroundStyle(categoryTheme.subTitle)
                 
-                AppAPIImage(imageName)
+                AppAPIImage(
+                    imageName,
+                    folderName: .categories,
+                    folderType: .thumbnail
+                )
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)

@@ -14,8 +14,8 @@ public struct ProductsView: View {
     @State var viewModel: ProductsViewModel
 
     private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
+        GridItem(.flexible(), spacing: 14),
+        GridItem(.flexible(), spacing: 14)
     ]
 
     public init(repository: ProductsRepository) {
@@ -31,12 +31,16 @@ public struct ProductsView: View {
 
             case .loaded:
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 12) {
+                    LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(viewModel.products) { product in
+//                            ProductCard(product: product) {
+//                                
+//                            } onT
                             ProductCard(product: product)
                                 .task {
-                                    await viewModel.loadMoreIfNeeded(currentItem: product)
-                                }
+                                await viewModel.loadMoreIfNeeded(currentItem: product)
+                            }
+                                
                         }
                     }
                     .padding(16)

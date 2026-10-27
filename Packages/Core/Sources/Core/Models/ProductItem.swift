@@ -17,6 +17,7 @@ public struct ProductItem: Sendable, Equatable, Identifiable {
     public let isFavorite: Bool?
     public let isOutOfStock: Bool?
     public let rating: String?
+    public let category: CategoryItem?
 
     
     public init(
@@ -28,7 +29,8 @@ public struct ProductItem: Sendable, Equatable, Identifiable {
         imageURL: String? = nil,
         isFavorite: Bool? = nil,
         isOutOfStock: Bool? = nil,
-        rating: String? = nil
+        rating: String? = nil,
+        category: CategoryItem? = nil
     ) {
         self.id = id
         self.name = name
@@ -39,6 +41,7 @@ public struct ProductItem: Sendable, Equatable, Identifiable {
         self.isFavorite = isFavorite
         self.isOutOfStock = isOutOfStock
         self.rating = rating
+        self.category = category
     }
     
 }
@@ -53,7 +56,9 @@ extension ProductItem {
         imageURL: "Rectangle 123.webp",
         isFavorite: true,
         isOutOfStock: false,
-        rating: "8.10"
+        rating: "8.10",
+        category: .example
+        
     )
 
     public static let examples: [ProductItem] = [
@@ -66,7 +71,8 @@ extension ProductItem {
             imageURL: "Rectangle 123.webp",
             isFavorite: true,
             isOutOfStock: false,
-            rating: "8.10"
+            rating: "8.10",
+            category: .example
         ),
         ProductItem(
             id: 8257,
@@ -77,7 +83,8 @@ extension ProductItem {
             imageURL: "Rectangle 122.webp",
             isFavorite: false,
             isOutOfStock: false,
-            rating: "3.10"
+            rating: "3.10",
+            category: .example
         ),
         ProductItem(
             id: 8258,
@@ -88,7 +95,8 @@ extension ProductItem {
             imageURL: "Rectangle 125.webp",
             isFavorite: false,
             isOutOfStock: false,
-            rating: "8.90"
+            rating: "8.90",
+            category: .example
         ),
         ProductItem(
             id: 8261,
@@ -99,7 +107,8 @@ extension ProductItem {
             imageURL: "Rectangle 126.webp",
             isFavorite: true,
             isOutOfStock: true,
-            rating: "9.20"
+            rating: "9.20",
+            category: .example
         )
     ]
 }

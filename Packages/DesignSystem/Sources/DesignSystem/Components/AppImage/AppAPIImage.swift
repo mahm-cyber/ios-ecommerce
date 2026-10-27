@@ -12,18 +12,25 @@ public struct AppAPIImage: View {
     @Environment(\.appTheme) private var theme
     @Environment(\.imageURLBuilder) private var imageURLBuilder
     public let imageName: String?
+    public let folderName: ImageFolderName
+    public let folderType: ImageFolderType
     
     
-    public init(_ imageName: String?) {
+    public init(
+        _ imageName: String?,
+        folderName: ImageFolderName = .generalImages,
+        folderType: ImageFolderType = .original,
+    ) {
         self.imageName = imageName
-        
+        self.folderName = folderName
+        self.folderType = folderType
     }
     
     public var body: some View {
         if let imageName = imageName, let url = imageURLBuilder.buildURL(
             image: imageName,
-            folderName: .categories,
-            folderType: .thumbnail
+            folderName: folderName,
+            folderType: folderType
         ) {
             AsyncImage(url: url) { phase in
                 switch phase {
@@ -43,7 +50,7 @@ public struct AppAPIImage: View {
                     EmptyView()
                 }
             }
-            .frame(width: 44, height: 44)
+            .scaledToFit()
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .shadow(
                 color: Color(hex: "#59315C",fallback: .black).opacity(0.4),

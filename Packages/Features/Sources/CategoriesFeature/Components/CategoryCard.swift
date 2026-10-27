@@ -37,7 +37,7 @@ public struct CategoryCard: View {
             VStack(spacing: 8) {
                 ZStack {
                   
-                        CategoryCardShape()
+                    BrandCardShape()
                         .fill(
                             isSelected ?   categoryTheme.activeBackground : categoryTheme.background
                         )
@@ -46,43 +46,17 @@ public struct CategoryCard: View {
                             .transition(.scale.combined(with: .opacity))
                     
                     
-                    CategoryCardShape()
+                    BrandCardShape()
                         .fill(theme.surface)
                         .overlay {
-                            
-                            if let imageName = category.imageName, let url = imageURLBuilder.buildURL(
-                                image: imageName,
+                            AppAPIImage(
+                                category.imageName,
                                 folderName: .categories,
                                 folderType: .original
+                                
                             )
-                                {
-                                    AsyncImage(url: url) { phase in
-                                    
-                                    switch phase {
-                                    case .success(let image ):
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                    case .failure:
-                                        Image(systemName: "photo")
-                                            .foregroundStyle(theme.textSecondary)
-                                    case .empty:
-                                        ProgressView()
-                                    @unknown default:
-                                        EmptyView()
-                                    }
-                                }
-                            
-                            } else
-                            {
-                                Image(systemName: "photo")
-                                    .font(.system(size: 32))
-                                    .foregroundStyle(
-                                        categoryTheme.background
-                                    )
-                            }
                         }
-                        .clipShape(CategoryCardShape())
+                        .clipShape(BrandCardShape())
                         .shadow(
                             color: theme.primary.opacity(0.15),
                             radius: 4,

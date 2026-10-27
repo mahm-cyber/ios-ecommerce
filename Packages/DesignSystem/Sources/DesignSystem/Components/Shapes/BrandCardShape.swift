@@ -1,13 +1,7 @@
-//
-//  SwiftUIView.swift
-//  Features
-//
-//  Created by NamaaIT Apple3 on 27/10/2026.
-//
 
 import SwiftUI
 
-public struct CategoryCardShape: Shape {
+public struct BrandCardShape: Shape {
     public init() {}
     
     public func path(in rect: CGRect) -> Path {
