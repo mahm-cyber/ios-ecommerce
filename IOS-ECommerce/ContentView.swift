@@ -6,10 +6,21 @@
 //
 
 import SwiftUI
-import FAQFeature
 import Data
+import Core
+
+// MARK: Features
+import FAQFeature
 import CategoriesFeature
 import ProductsFeature
+import ProductDetailFeature
+
+
+private enum AppRoute: Hashable {
+    case faq
+    case categories
+    case products
+}
 
 struct ContentView: View {
     let configuration: AppConfiguration
@@ -38,10 +49,9 @@ struct ContentView: View {
                 Text("Environment: \(configuration.environment.rawValue)")
                 Text("Host: \(configuration.baseURL.host() ?? "")")
 
+                // MARK: FAQView
                 if let faqRepository {
-                    NavigationLink {
-                        FAQView(repository: faqRepository)
-                    } label: {
+                    NavigationLink(value: AppRoute.faq) {
                         Text("Frequently Asked Questions")
                             .font(.headline)
                             .padding()
@@ -52,11 +62,9 @@ struct ContentView: View {
                     .padding(.horizontal, 24)
                 }
                 
+                // MARK: CategoriesView
                 if let categoriesRepository {
-                    NavigationLink {
-                        CategoriesView(repository: categoriesRepository)
-                        
-                    } label: {
+                    NavigationLink(value: AppRoute.categories) {
                         Text("Categories")
                             .font(.headline)
                             .padding()
@@ -67,11 +75,9 @@ struct ContentView: View {
                     .padding(.horizontal, 24)
                 }
                 
+                // MARK: ProductsView
                 if let productesRepository {
-                    NavigationLink {
-                        ProductsView(repository: productesRepository)
-                        
-                    } label: {
+                    NavigationLink(value: AppRoute.products) {
                         Text("Products")
                             .font(.headline)
                             .padding()
@@ -84,10 +90,40 @@ struct ContentView: View {
             }
             .padding()
             .navigationTitle("Home")
+            .navigationDestination(for: AppRoute.self) { route in
+                switch route {
+                case .faq:
+                    if let faqRepository {
+                        FAQView(repository: faqRepository)
+                    }
+                case .categories:
+                    if let categoriesRepository {
+                        CategoriesView(repository: categoriesRepository)
+                    }
+                case .products:
+                    if let productesRepository {
+                        ProductsView(repository: productesRepository)
+                    }
+                }
+            }
+            .navigationDestination(for: ProductItem.self) { product in
+                if let productesRepository {
+                    ProductDetailView(
+                        productItem: product,
+                        repository: productesRepository
+                    )
+                }
+            }
         }
     }
 }
 
 #Preview {
-    ContentView(configuration: .sample)
+    let container = AppContainer(appConfiguration: .sample)
+    ContentView(
+        configuration: container.appConfiguration,
+        faqRepository: container.faqRepository,
+        categoriesRepository: container.categoriesRepository,
+        productesRepository: container.productsRepository
+    )
 }

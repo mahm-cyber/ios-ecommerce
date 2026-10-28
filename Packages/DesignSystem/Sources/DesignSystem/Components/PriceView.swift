@@ -120,7 +120,7 @@ public struct PriceView: View {
                     color: theme.textSecondary,
                     isStruckThrough: true
                 )
-                .font(theme.typography.subheadline)
+                .font(theme.typography.caption)
                 .foregroundStyle(theme.textSecondary)
                 .strikethrough(true, color: theme.textSecondary)
             }

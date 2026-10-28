@@ -33,11 +33,13 @@ public struct ProductsView: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(viewModel.products) { product in
-                            ProductCard(product: product)
-                                .task {
-                                await viewModel.loadMoreIfNeeded(currentItem: product)
+                            NavigationLink(value: product) {
+                                ProductCard(product: product)
+                                    .task {
+                                        await viewModel.loadMoreIfNeeded(currentItem: product)
+                                    }
                             }
-                                
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(16)
