@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ProductItem: Sendable, Equatable, Identifiable {
+public struct ProductItem: Sendable, Equatable, Identifiable, Hashable {
     public let id: Int
     public let name: String
     public let price: Double
@@ -18,6 +18,10 @@ public struct ProductItem: Sendable, Equatable, Identifiable {
     public let isOutOfStock: Bool?
     public let rating: String?
     public let category: CategoryItem?
+    public let description: String?
+    public let stocks: Int?
+    public let code: String?
+    public let tags: [String]
 
     
     public init(
@@ -30,7 +34,11 @@ public struct ProductItem: Sendable, Equatable, Identifiable {
         isFavorite: Bool? = nil,
         isOutOfStock: Bool? = nil,
         rating: String? = nil,
-        category: CategoryItem? = nil
+        category: CategoryItem? = nil,
+        description: String? = nil,
+        stocks: Int? = nil,
+        code: String? = nil,
+        tags: [String] = []
     ) {
         self.id = id
         self.name = name
@@ -42,6 +50,10 @@ public struct ProductItem: Sendable, Equatable, Identifiable {
         self.isOutOfStock = isOutOfStock
         self.rating = rating
         self.category = category
+        self.description = description
+        self.stocks = stocks
+        self.code = code
+        self.tags = tags
     }
     
 }
@@ -57,8 +69,11 @@ extension ProductItem {
         isFavorite: true,
         isOutOfStock: false,
         rating: "8.10",
-        category: .example
-        
+        category: .example,
+        description: "Intensive calcium bonding serum designed to deeply hydrate, strengthen skin barriers, and enhance elasticity.",
+        stocks: 48,
+        code: "54941885235522",
+        tags: ["Serum", "Calcium", "Hydrating"]
     )
 
     public static let examples: [ProductItem] = [

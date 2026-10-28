@@ -9,5 +9,6 @@ import Foundation
 import Core
 
 public protocol ProductsRepository: Sendable {
-    func fetchProducts(page: Int ) async throws -> ProductsPage
+    func fetchProducts(page: Int) async throws -> ProductsPage
+    func fetchProductDetail(id: Int) async throws -> ProductDetail
 }

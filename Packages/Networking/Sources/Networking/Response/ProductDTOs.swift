@@ -71,25 +71,72 @@ public struct ProductOfferDTO: Decodable, Sendable {
     }
 }
 
-public struct ProductTagDTO: Decodable, Sendable {
-    public let id: Int
+public struct ProductTagTranslationDTO: Decodable, Sendable {
+    public let id: Int?
+    public let locale: String?
     public let name: String?
     public let normalizedName: String?
 
     public init(
-        id: Int,
+        id: Int? = nil,
+        locale: String? = nil,
         name: String? = nil,
         normalizedName: String? = nil
     ) {
         self.id = id
+        self.locale = locale
         self.name = name
         self.normalizedName = normalizedName
     }
 
     enum CodingKeys: String, CodingKey {
-        case id
+        case id = "tag_translations_id"
+        case locale
         case name
         case normalizedName = "normalized_name"
+    }
+}
+
+public struct ProductTagDTO: Decodable, Sendable {
+    public let id: Int
+    public let name: String?
+    public let normalizedName: String?
+    public let translations: [ProductTagTranslationDTO]?
+
+    public init(
+        id: Int,
+        name: String? = nil,
+        normalizedName: String? = nil,
+        translations: [ProductTagTranslationDTO]? = nil
+    ) {
+        self.id = id
+        self.name = name
+        self.normalizedName = normalizedName
+        self.translations = translations
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case tagsId = "tags_id"
+        case name
+        case normalizedName = "normalized_name"
+        case translations
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let id = try container.decodeIfPresent(Int.self, forKey: .id) {
+            self.id = id
+        } else if let tagsId = try container.decodeIfPresent(Int.self, forKey: .tagsId) {
+            self.id = tagsId
+        } else {
+            self.id = 0
+        }
+        let translations = try container.decodeIfPresent([ProductTagTranslationDTO].self, forKey: .translations)
+        self.translations = translations
+        let directName = try container.decodeIfPresent(String.self, forKey: .name)
+        self.name = directName ?? translations?.first(where: { $0.name?.isEmpty == false })?.name
+        self.normalizedName = try container.decodeIfPresent(String.self, forKey: .normalizedName)
     }
 }
 
@@ -238,6 +285,38 @@ public struct ProductItemDTO: Decodable, Sendable {
         case offer
         case tags
         case yourCountryIsExcluded = "your_country_is_excluded"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try c.decode(Int.self, forKey: .id)
+        self.categoryId = try c.decodeIfPresent(Int.self, forKey: .categoryId)
+        self.code = try c.decodeIfPresent(String.self, forKey: .code)
+        self.barcode = try c.decodeIfPresent(String.self, forKey: .barcode)
+        self.img = try c.decodeIfPresent(String.self, forKey: .img)
+        self.video = try c.decodeIfPresent(String.self, forKey: .video)
+        self.price = try c.decodeFlexibleDouble(forKey: .price)
+        self.priceAfterDiscount = try c.decodeFlexibleDoubleIfPresent(forKey: .priceAfterDiscount)
+        self.available = try c.decodeIfPresent(String.self, forKey: .available)
+        self.status = try c.decodeIfPresent(String.self, forKey: .status)
+        self.points = try c.decodeIfPresent(Int.self, forKey: .points)
+        self.pointsValue = try c.decodeFlexibleDoubleIfPresent(forKey: .pointsValue)
+        self.stocks = try c.decodeIfPresent(Int.self, forKey: .stocks)
+        self.rating = try c.decodeIfPresent(String.self, forKey: .rating)
+        self.title = try c.decode(String.self, forKey: .title)
+        self.desc = try c.decodeIfPresent(String.self, forKey: .desc)
+        self.slug = try c.decode(String.self, forKey: .slug)
+        self.type = try c.decodeIfPresent(String.self, forKey: .type)
+        self.lowestWeightAvailable = try c.decodeFlexibleDoubleIfPresent(forKey: .lowestWeightAvailable)
+        self.isFav = try c.decodeIfPresent(Int.self, forKey: .isFav)
+        self.isNotify = try c.decodeIfPresent(Int.self, forKey: .isNotify)
+        self.isNew = try c.decodeIfPresent(Int.self, forKey: .isNew)
+        self.mostWanted = try c.decodeIfPresent(Int.self, forKey: .mostWanted)
+        self.hasChoices = try c.decodeIfPresent(Bool.self, forKey: .hasChoices)
+        self.category = try c.decodeIfPresent(ProductCategoryDTO.self, forKey: .category)
+        self.offer = try c.decodeIfPresent(ProductOfferDTO.self, forKey: .offer)
+        self.tags = try c.decodeIfPresent([ProductTagDTO].self, forKey: .tags)
+        self.yourCountryIsExcluded = try c.decodeIfPresent(Int.self, forKey: .yourCountryIsExcluded)
     }
 }
 

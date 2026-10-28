@@ -182,6 +182,9 @@ struct ProductsRepositoryTests {
         #expect(first.rating == "8.10")
         #expect(first.category?.id == 1607)
         #expect(first.category?.title == "Hydrating Serums")
+        #expect(first.description == "Barrier Strengthening")
+        #expect(first.stocks == 48)
+        #expect(first.code == "54941885235522")
 
         let second = page.items[1]
         #expect(second.id == 8257)
@@ -225,5 +228,114 @@ struct ProductsRepositoryTests {
         await #expect(throws: NetworkError.self) {
             try await repo.fetchProducts(page: 1)
         }
+    }
+
+    @Test("fetchProductDetail successfully fetches and maps product detail")
+    func fetchProductDetailSuccess() async throws {
+        let json = """
+        {
+          "status": 200,
+          "message": "Home Data Returned Successfully",
+          "errors": null,
+          "data": {
+            "product": {
+              "products_id": 8260,
+              "FK_categories_id": 1607,
+              "brands_id": 135,
+              "products_code": "54941885235522",
+              "products_barcode": null,
+              "products_img": "Rectangle 123.webp",
+              "products_price": "133.37",
+              "products_price_after_discount": null,
+              "products_points": 100,
+              "products_video": "https://youtube.com/shorts/ClDIgCZSEM8",
+              "products_type": "count",
+              "products_stocks": 48,
+              "products_rating": "8.10",
+              "products_title": "Dr. Melaxin Calcium Bonding Serum",
+              "products_desc": "<p>Deep <b>Hydration</b> &amp; Elasticity</p>",
+              "products_slug": "dr-melaxin-calcium-bonding-serum",
+              "is_fav": 1,
+              "all_images": [
+                "Rectangle 123.webp",
+                "5_extra.webp"
+              ],
+              "images": [],
+              "brand": {
+                "brands_id": 135,
+                "brands_name": "elementre",
+                "brands_slug": "elementre",
+                "brands_img": "elementre.webp"
+              },
+              "category": {
+                "categories_id": 1607,
+                "categories_title": "Hydrating Serums",
+                "categories_slug": "hydrating-serums"
+              },
+              "tags": [
+                {
+                  "tags_id": 292,
+                  "name": "Skin",
+                  "normalized_name": "Skin"
+                }
+              ],
+              "SimilarProducts": [
+                {
+                  "products_id": 8256,
+                  "FK_categories_id": 1607,
+                  "products_code": "product_1",
+                  "products_barcode": null,
+                  "products_img": "Rectangle 127.webp",
+                  "products_price": 278,
+                  "products_price_after_discount": null,
+                  "products_stocks": 91,
+                  "products_rating": "0.00",
+                  "products_title": "Sesderma serum",
+                  "products_slug": "sesderma-serum",
+                  "is_fav": 0
+                }
+              ],
+              "offer": null
+            },
+            "ratingsCount": 5,
+            "allow_rating": 1
+          }
+        }
+        """
+
+        let transport = TestTransport { request in
+            #expect(request.url?.path.hasSuffix("/product/8260") == true)
+            #expect(request.url?.query?.contains("device_type=app") == true)
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (Data(json.utf8), response)
+        }
+
+        let client = makeClient(transport: transport)
+        let repo = AppProductsRepository(client: client)
+
+        let detail = try await repo.fetchProductDetail(id: 8260)
+
+        #expect(detail.id == 8260)
+        #expect(detail.name == "Dr. Melaxin Calcium Bonding Serum")
+        #expect(detail.price == 133.37)
+        #expect(detail.isFavorite == true)
+        #expect(detail.isOutOfStock == false)
+        #expect(detail.description == "Deep Hydration & Elasticity")
+        #expect(detail.brandName == "elementre")
+        #expect(detail.brandImage == "elementre.webp")
+        #expect(detail.galleryImages == ["Rectangle 123.webp", "5_extra.webp"])
+        #expect(detail.ratingsCount == 5)
+        #expect(detail.allowRating == true)
+        #expect(detail.points == 100)
+        #expect(detail.videoURL == "https://youtube.com/shorts/ClDIgCZSEM8")
+        #expect(detail.tags == ["Skin"])
+        #expect(detail.similarProducts.count == 1)
+        #expect(detail.similarProducts.first?.id == 8256)
+        #expect(detail.similarProducts.first?.price == 278.0)
     }
 }

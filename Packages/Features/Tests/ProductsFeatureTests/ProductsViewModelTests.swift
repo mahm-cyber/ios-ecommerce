@@ -13,13 +13,25 @@ import Data
 
 final class FakeProductsRepository: ProductsRepository, @unchecked Sendable {
     var resultForPage: (Int) -> Result<ProductsPage, Error>
+    var resultForDetail: ((Int) -> Result<ProductDetail, Error>)?
 
-    init(resultForPage: @escaping (Int) -> Result<ProductsPage, Error>) {
+    init(
+        resultForPage: @escaping (Int) -> Result<ProductsPage, Error>,
+        resultForDetail: ((Int) -> Result<ProductDetail, Error>)? = nil
+    ) {
         self.resultForPage = resultForPage
+        self.resultForDetail = resultForDetail
     }
 
     func fetchProducts(page: Int) async throws -> ProductsPage {
         try resultForPage(page).get()
+    }
+
+    func fetchProductDetail(id: Int) async throws -> ProductDetail {
+        if let resultForDetail {
+            return try resultForDetail(id).get()
+        }
+        return .example
     }
 }
 

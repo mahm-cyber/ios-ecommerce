@@ -93,6 +93,13 @@ private struct PreviewProductsRepository: ProductsRepository {
             total: items.count
         )
     }
+
+    func fetchProductDetail(id: Int) async throws -> ProductDetail {
+        if shouldFail {
+            throw URLError(.notConnectedToInternet)
+        }
+        return .example
+    }
 }
 
 #Preview("Loaded State") {
