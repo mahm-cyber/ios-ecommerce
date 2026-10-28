@@ -27,6 +27,13 @@ struct AppRootView: View {
         }
     }
     
+    private var currentCurrency: CurrencyConfig {
+        if case .loaded(let bootstrapData) = state {
+            return bootstrapData.currency
+        }
+        return .default
+    }
+    
     private var config: AppConfiguration {
         return container.appConfiguration
     }
@@ -85,6 +92,7 @@ struct AppRootView: View {
         }
         .appTheme(currentTheme)
         .imageURLBuilder(imageURLBuilder)
+        .currencyConfig(currentCurrency)
     }
 }
 

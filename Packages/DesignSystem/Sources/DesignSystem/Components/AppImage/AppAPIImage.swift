@@ -34,44 +34,30 @@ public struct AppAPIImage: View {
         ) {
             AsyncImage(url: url) { phase in
                 switch phase {
-                    
                 case .success(let image):
                     image
                         .resizable()
-                        .scaledToFill()
-                        .shadow(color: Color.black.opacity(0.04), radius: 3, x: 0, y: 1)
-                    
+                        .scaledToFit()
                 case .empty:
                     ProgressView()
-                    
-                case  .failure:
+                case .failure:
                     thumbnailFallback
                 @unknown default:
                     EmptyView()
                 }
             }
-            .scaledToFit()
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(
-                color: Color(hex: "#59315C",fallback: .black).opacity(0.4),
-                radius: 2,
-                x: 0,
-                y: 1
-            )
         } else {
             thumbnailFallback
         }
     }
     
     private var thumbnailFallback: some View {
-        RoundedRectangle(cornerRadius: 10)
-            .fill(theme.border.opacity(0.3))
-            .frame(width: 44, height: 44)
-            .overlay {
-                Image(systemName: "photo")
-                    .font(.system(size: 16))
-                    .foregroundStyle(theme.textSecondary)
-            }
+        ZStack {
+            theme.border.opacity(0.12)
+            Image(systemName: "photo")
+                .font(.system(size: 20))
+                .foregroundStyle(theme.textSecondary.opacity(0.4))
+        }
     }
 }
 

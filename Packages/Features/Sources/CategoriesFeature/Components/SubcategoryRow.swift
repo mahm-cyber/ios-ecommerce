@@ -53,6 +53,8 @@ public  struct SubcategoryRow: View {
                     folderName: .categories,
                     folderType: .thumbnail
                 )
+                .frame(width: 44, height: 44)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)

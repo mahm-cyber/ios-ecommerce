@@ -21,6 +21,15 @@ struct PriceViewTests {
         #expect(priceView.amount == 120.0)
         #expect(priceView.originalAmount == nil)
         #expect(priceView.currency == nil)
+        #expect(priceView.color == nil)
+    }
+
+    @Test("PriceView stores optional custom color")
+    func customColorInitialization() {
+        let priceView = PriceView(amount: 120.0, color: .black)
+
+        #expect(priceView.amount == 120.0)
+        #expect(priceView.color == .black)
     }
 
     @Test("PriceView stores original amount for discounts")

@@ -44,8 +44,10 @@ public struct AppProductsRepository: ProductsRepository {
             imageURL: productItemDTO.img,
             isFavorite: productItemDTO.isFav == 1,
             isOutOfStock: (productItemDTO.stocks ?? 0) <= 1,
-            rating: productItemDTO.rating
-            
+            rating: productItemDTO.rating,
+            category: productItemDTO.category.map { dto in
+                CategoryItem(id: dto.id, title: dto.title ?? "", slug: dto.slug ?? "")
+            }
         )
     }
 

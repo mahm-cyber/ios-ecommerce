@@ -26,4 +26,8 @@ extension View {
     public func currency(_ currency: CurrencyConfig) -> some View {
         environment(\.currencyConfig, currency)
     }
+    
+    public func currencyConfig(_ currency: CurrencyConfig) -> some View {
+        environment(\.currencyConfig, currency)
+    }
 }

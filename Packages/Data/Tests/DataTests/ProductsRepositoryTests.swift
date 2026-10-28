@@ -180,6 +180,8 @@ struct ProductsRepositoryTests {
         #expect(first.isFavorite == true)
         #expect(first.isOutOfStock == false)
         #expect(first.rating == "8.10")
+        #expect(first.category?.id == 1607)
+        #expect(first.category?.title == "Hydrating Serums")
 
         let second = page.items[1]
         #expect(second.id == 8257)
@@ -187,6 +189,7 @@ struct ProductsRepositoryTests {
         #expect(second.isOutOfStock == true)
         #expect(second.salePrice == nil)
         #expect(second.discountPercentage == nil)
+        #expect(second.category == nil)
     }
 
     @Test("fetchProducts marks hasMore as false when on last page")

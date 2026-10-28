@@ -20,54 +20,46 @@ struct TopImageContainer: View {
     }
     
     var body: some View {
-        
         ZStack(alignment: .topTrailing) {
-            // 1. Background Box with Subtle Border
+            // 1. Single wavy container with subtle border
             BrandCardShape()
-                .fill(productTheme.imageBackground)
-                .overlay {
+                .fill(productTheme.background)
+                .overlay(
                     BrandCardShape()
-                        .stroke(theme.border.opacity(0.3), lineWidth: 1)
-                }
-            BrandCardShape()
-                .fill(theme.surface)
-                .overlay {
-                    AppAPIImage(imageName, folderName: .products, folderType: .original)
-                        .scaledToFit()
-                        .padding(10)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                .clipShape(BrandCardShape())
-           
-              
-        
+                        .stroke(productTheme.border, lineWidth: 1.5)
+                )
             
+            // 2. Product Image clipped to the same wavy shape and scaled down
+            AppAPIImage(imageName, folderName: .products, folderType: .original)
+                .scaledToFit()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .clipShape(BrandCardShape())
+                .scaleEffect(0.95)
+            
+            // 3. Heart Button (Top Trailing)
             Button(action: onTapFavButton) {
                 Image(systemName: isFav ? "heart.fill" : "heart")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(
-                        isFav ? productTheme.favorite : productTheme
-                            .unfavorite)
-                    .padding(8)
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(isFav ? productTheme.favorite : productTheme.unfavorite)
+                    .frame(width: 34, height: 34)
                     .background(Circle().fill(productTheme.favoriteBackground))
             }
-            .padding(10)
+            .padding(8)
             
+            // 4. Plus Button (Bottom Leading)
             Button(action: onTapAddToCart) {
                 Image(systemName: "plus")
-                    .font(.system(size: 18, weight: .medium))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(productTheme.onAddToCart)
-                    .padding(8)
+                    .frame(width: 34, height: 34)
+                    .background(Circle().fill(productTheme.addToCartBackground))
             }
-            
-            .background(productTheme.addToCartBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 100))
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity,
                 alignment: .bottomLeading
             )
-            .padding(10)
+            .padding(8)
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -75,7 +67,7 @@ struct TopImageContainer: View {
 
 #Preview {
     TopImageContainer(
-        imageName: "https://pixabay.com/photos/flycatcher-bird-animal-photography-9684912/",
+        imageName: "https://polaris-max.nmait.net/uploads/28/products/original/Rectangle 123.webp",
         isFav: true) {
             
         } onTapAddToCart: {

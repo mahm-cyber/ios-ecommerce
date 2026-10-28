@@ -33,9 +33,6 @@ public struct ProductsView: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(viewModel.products) { product in
-//                            ProductCard(product: product) {
-//                                
-//                            } onT
                             ProductCard(product: product)
                                 .task {
                                 await viewModel.loadMoreIfNeeded(currentItem: product)
@@ -112,6 +109,9 @@ private struct PreviewProductsRepository: ProductsRepository {
 
 #Preview("Error State") {
     NavigationStack {
-        ProductsView(repository: PreviewProductsRepository(shouldFail: true))
+        ProductsView(repository: PreviewProductsRepository(shouldFail: true))     .imageURLBuilder(ImageURLBuilder(
+            baseURL: URL(string: "https://polaris-max.nmait.net"),
+            accountID: "28"
+        ))
     }
 }

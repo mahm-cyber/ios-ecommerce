@@ -72,7 +72,9 @@ public struct AppTheme: Sendable, Equatable {
             favoriteBackground:  Color(hex: "#F5F5F5", fallback: .gray),
             addToCartBackground: Color(hex: "#F5F5F5", fallback: .gray),
             onAddToCart: primaryColor,
-            rate: Color(hex: "#FEBC2F", fallback: .yellow)
+            rate: Color(hex: "#FEBC2F", fallback: .yellow),
+            border: Color(hex: "#EEEBEF", fallback: Color(white: 0.94)),
+            price: textTheme.primary
         )
 
         self.init(

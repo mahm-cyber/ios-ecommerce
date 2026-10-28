@@ -12,13 +12,15 @@ import SwiftUI
 @MainActor
 public struct CurrencyLabel: View {
     
+    let isSAR: Bool
     let code: String
     
     init(for currency: CurrencyConfig) {
+        self.isSAR = currency.isSAR
         self.code = currency.code
     }
     public  var body: some View {
-        if  code.uppercased() == "SAR" {
+        if  isSAR {
             Image("saudi-riyal", bundle: .module)
                 .renderingMode(.template)
                 .resizable()
@@ -50,12 +52,11 @@ public struct CompinnedTextPrice: View {
     
     
     public var body: some View {
-        HStack {
-            if  isLeading {
+        HStack(spacing: 4) {
+            if isLeading {
                 CurrencyLabel(for: currency)
                 Text(Self.format(amount: amount))
             } else {
-                
                 Text(Self.format(amount: amount))
                 CurrencyLabel(for: currency)
             }
@@ -77,22 +78,27 @@ public struct PriceView: View {
     let amount: Double
     let originalAmount: Double?
     let currency: CurrencyConfig?
+    let color: Color?
     
     public init(
         amount: Double,
         originalAmount: Double? = nil,
-        currency: CurrencyConfig? = nil
+        currency: CurrencyConfig? = nil,
+        color: Color? = nil
     ) {
         self.amount = amount
         self.originalAmount = originalAmount
         self.currency = currency
+        self.color = color
     }
     
     private var activeCurrency: CurrencyConfig {
         currency ?? envCurrency
     }
     
-    
+    private var priceColor: Color {
+        color ?? theme.primary
+    }
     
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 6) {
@@ -101,10 +107,10 @@ public struct PriceView: View {
                 isLeading: activeCurrency.isLeading,
                 currency: activeCurrency,
                 font: theme.typography.price,
-                color: theme.primary
+                color: priceColor
             )
             .font(theme.typography.price)
-            .foregroundStyle(theme.primary)
+            .foregroundStyle(priceColor)
             if let originalAmount, originalAmount > amount {
                 CompinnedTextPrice(
                     amount: originalAmount,

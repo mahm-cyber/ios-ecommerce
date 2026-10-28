@@ -19,13 +19,20 @@ public enum StoreStatus: Sendable, Equatable {
 public struct CurrencyConfig: Sendable, Equatable {
     public let code: String
     public let isLeading: Bool
+    public let isSAR: Bool
     
     public init(code: String, isLeading: Bool) {
         self.code = code
         self.isLeading = isLeading
+        self.isSAR = code.uppercased() == "SAR"
     }
     
-    public static let `default` = CurrencyConfig(code: "SAR", isLeading: false)
+    
+    
+    public static let `default` = CurrencyConfig(
+        code: "SAR",
+        isLeading: false
+    )
 }
 
 public struct ThemeConfig: Sendable, Equatable {
